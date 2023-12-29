@@ -6,6 +6,7 @@ services:
             - "2181:2181"
         networks:
             - tc-network
+        restart: always
     kafka:
         image: wurstmeister/kafka:2.11-1.1.1
         ports:
@@ -22,18 +23,21 @@ services:
             KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
+        restart: always
     api:
         build: services/api
         ports:
             - "3000:3000"
         networks:
             - tc-network
+        restart: always
     website:
         build: services/website
         ports:
             - "5173:3000"
         networks:
             - tc-network
+        restart: always
 networks:
     tc-network:
         driver: bridge
