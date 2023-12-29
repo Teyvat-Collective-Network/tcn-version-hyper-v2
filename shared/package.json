@@ -1,0 +1,19 @@
+{
+    "name": "@teyvat-collective-network/shared-hyper-v2",
+    "version": "0.0.2",
+    "publishConfig": {
+        "access": "public"
+    },
+    "module": "index.ts",
+    "type": "module",
+    "devDependencies": {
+        "@types/ip": "^1.1.3",
+        "bun-types": "latest"
+    },
+    "peerDependencies": {
+        "typescript": "^5.0.0"
+    },
+    "dependencies": {
+        "kafkajs": "^2.2.4"
+    }
+}

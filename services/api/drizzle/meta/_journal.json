@@ -1,0 +1,13 @@
+{
+  "version": "5",
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1703849129283,
+      "tag": "0000_cheerful_moira_mactaggert",
+      "breakpoints": true
+    }
+  ]
+}
