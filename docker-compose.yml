@@ -27,14 +27,14 @@ services:
     api:
         build: services/api
         ports:
-            - "3000:3000"
+            - "8000:3000"
         networks:
             - tc-network
         restart: always
     website:
         build: services/website
         ports:
-            - "5173:3000"
+            - "7001:3000"
         networks:
             - tc-network
         restart: always
