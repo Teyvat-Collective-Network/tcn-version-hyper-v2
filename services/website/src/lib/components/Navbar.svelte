@@ -1,5 +1,6 @@
 <script lang="ts">
     import { browser } from "$app/environment";
+    import { page } from "$app/stores";
     import { darkMode, user } from "$lib/stores";
     import Container from "./Container.svelte";
     import Icon from "./Icon.svelte";
@@ -78,10 +79,17 @@
     <a class="sidebar-button t1" href="/join"><Icon icon="door-open"></Icon> Join</a>
     <a class="sidebar-button t1" href="/info/constitution"><Icon icon="building-columns"></Icon> Constitution</a>
     <a class="sidebar-button t1" href="/contact"><Icon icon="phone"></Icon> Contact Us</a>
+    {#if $user?.observer}
+        <a class="sidebar-button t1" href="/admin"><Icon icon="screwdriver-wrench"></Icon> Admin Dashboard</a>
+    {/if}
     {#if $user}
-        <a class="sidebar-button t1" href="/auth/logout"><Icon icon="right-from-bracket"></Icon> Log Out</a>
+        <a class="sidebar-button t1" href="/auth/logout?{new URLSearchParams({ redirect: $page.url.pathname })}">
+            <Icon icon="right-from-bracket"></Icon> Log Out
+        </a>
     {:else}
-        <a class="sidebar-button t1" href="/auth/login"><Icon icon="right-to-bracket"></Icon> Log In</a>
+        <a class="sidebar-button t1" href="/auth/login?{new URLSearchParams({ redirect: $page.url.pathname })}">
+            <Icon icon="right-to-bracket"></Icon> Log In
+        </a>
     {/if}
     <span class="flex-spacer"></span>
     {#if $user}

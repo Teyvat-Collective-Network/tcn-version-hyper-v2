@@ -1,21 +1,17 @@
-interface User {
-    id: string;
-    username: string;
-    avatar: string;
-    admin: boolean;
-    owner: boolean;
-}
+import type { AuthUser } from "@teyvat-collective-network/shared-hyper-v2";
 
-declare namespace App {
-    interface Locals {
-        token: string?;
-        darkMode: boolean;
-        user: User;
-    }
+declare global {
+    declare namespace App {
+        interface Locals {
+            token: string?;
+            darkMode: boolean;
+            user: AuthUser;
+        }
 
-    interface PageData {
-        token: string?;
-        darkMode: boolean;
-        user: User;
+        interface PageData {
+            token: string?;
+            darkMode: boolean;
+            user: AuthUser;
+        }
     }
 }
