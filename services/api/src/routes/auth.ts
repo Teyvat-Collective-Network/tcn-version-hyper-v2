@@ -1,3 +1,4 @@
+import { AuthUser } from "@teyvat-collective-network/shared-hyper-v2";
 import { t } from "elysia";
 import { App } from "../app.js";
 import bot from "../bot.js";
@@ -40,7 +41,7 @@ export default (app: App) =>
             )
             .get(
                 "/user",
-                async ({ user }) => {
+                async ({ user }): Promise<AuthUser | null> => {
                     if (!user) return null;
 
                     try {

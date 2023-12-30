@@ -1,8 +1,9 @@
 <script lang="ts">
     import { browser } from "$app/environment";
-    import { darkMode } from "$lib/stores";
+    import { darkMode, user } from "$lib/stores";
     import Container from "./Container.svelte";
     import Icon from "./Icon.svelte";
+    import Timestamp from "./Timestamp.svelte";
 
     let dark = true;
     let width: number = Infinity;
@@ -20,6 +21,11 @@
             dark = false;
             document.documentElement.classList.remove("dark");
         }
+
+        document.addEventListener("click", (e) => {
+            const target = e.target as HTMLAnchorElement;
+            if (target.classList.contains("sidebar-button") && target.href !== "javascript:void(0)") sidebarOpen = false;
+        });
     }
 
     function toggleTheme() {
@@ -33,6 +39,7 @@
 
 {#if !wide}
     <div id="bar"></div>
+    <div id="spacer"></div>
 {/if}
 
 <Container>
@@ -41,7 +48,7 @@
             <img id="home-icon" src="/favicon.png" alt="TCN Icon" />
             <div id="home-label">Teyvat Collective Network</div>
         </span>
-        <span id="spacer"></span>
+        <span class="flex-spacer"></span>
         {#if wide}
             <a class="navbutton" href="/">Home</a>
             <a class="navbutton" href="/about">About</a>
@@ -62,16 +69,40 @@
 <div id="overlay" class={sidebarOpen ? "" : "hide"} role="none" on:click={() => (sidebarOpen = false)}></div>
 
 <nav id="sidebar" class={sidebarOpen ? "" : "hide"}>
-    <a href={"javascript:void(0)"} class="sidebar-button t1" on:click={toggleTheme}>
-        <Icon icon={dark ? "sun" : "moon"}></Icon>
-        Switch to {dark ? "Light" : "Dark"} Mode
+    <a class="sidebar-button t1" href={"javascript:void(0)"} on:click={toggleTheme}>
+        <Icon icon={dark ? "sun" : "moon"}></Icon> Switch to {dark ? "Light" : "Dark"} Mode
     </a>
+    <a class="sidebar-button t1" href="/"><Icon icon="home"></Icon> Home</a>
+    <a class="sidebar-button t1" href="/about"><Icon icon="info-circle"></Icon> About Us</a>
+    <a class="sidebar-button t1" href="/partners"><Icon icon="handshake"></Icon> Partners</a>
+    <a class="sidebar-button t1" href="/join"><Icon icon="door-open"></Icon> Join</a>
+    <a class="sidebar-button t1" href="/info/constitution"><Icon icon="building-columns"></Icon> Constitution</a>
+    <a class="sidebar-button t1" href="/contact"><Icon icon="phone"></Icon> Contact Us</a>
+    {#if $user}
+        <a class="sidebar-button t1" href="/auth/logout"><Icon icon="right-from-bracket"></Icon> Log Out</a>
+    {:else}
+        <a class="sidebar-button t1" href="/auth/login"><Icon icon="right-to-bracket"></Icon> Log In</a>
+    {/if}
+    <span class="flex-spacer"></span>
+    {#if $user}
+        <span id="logged-in-as">Logged in as {$user.username}</span>
+    {/if}
+    <span id="copyright">&copy; 2024 TCN Development Team</span>
+    <span id="last-loaded">Page last loaded: <Timestamp ms timestamp={Date.now()}></Timestamp></span>
 </nav>
 
 <style lang="scss">
-    #bar {
+    #bar,
+    #spacer {
         height: 80px;
+    }
+
+    #bar {
         background-color: var(--toggle-bar-bg);
+        left: 0;
+        position: fixed;
+        right: 0;
+        top: 0;
     }
 
     #navbar {
@@ -101,9 +132,9 @@
 
     #sidebar {
         background-color: var(--sidebar-bg);
+        bottom: 0;
         display: flex;
         flex-direction: column;
-        height: 100%;
         align-items: stretch;
         padding-top: 80px;
         position: fixed;
@@ -152,6 +183,7 @@
     .navbutton {
         border-bottom: 3px solid transparent;
         font-size: 120%;
+        font-weight: bold;
         margin: 0 1rem;
         padding-bottom: 0.25rem;
         transition: border-bottom 200ms;
@@ -176,10 +208,6 @@
     #home-label {
         font-size: 200%;
         font-weight: bold;
-    }
-
-    #spacer {
-        flex-grow: 1;
     }
 
     svg {
@@ -229,5 +257,22 @@
                 transform: rotateZ(45deg) scaleX(1.414);
             }
         }
+    }
+
+    #logged-in-as {
+        font-size: 120%;
+        color: var(--text-2);
+        padding: 0.25rem 1rem;
+    }
+
+    #copyright {
+        font-size: 120%;
+        padding: 0.25rem 1rem;
+    }
+
+    #last-loaded {
+        font-size: 120%;
+        color: var(--text-2);
+        padding: 0.25rem 1rem 0.75rem 1rem;
     }
 </style>

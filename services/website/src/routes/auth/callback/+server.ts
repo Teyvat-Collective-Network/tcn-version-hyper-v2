@@ -8,7 +8,7 @@ export const GET: RequestHandler = async ({ cookies, url }) => {
 
     if (!state || state !== url.searchParams.get("state")) return new Response("Invalid or missing state.", { status: 401 });
 
-    const { error, token }: { error?: string; token?: string } = await api(null, `POST /token`, url.searchParams.get("code"));
+    const { error, token }: { error?: string; token?: string } = await api(null, `POST /auth/login`, url.searchParams.get("code"));
 
     if (!token) return new Response(error ?? "Unknown error.", { status: 401 });
 

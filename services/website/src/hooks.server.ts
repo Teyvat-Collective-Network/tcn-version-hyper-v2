@@ -8,7 +8,7 @@ export const handle: Handle = async ({ event, resolve }) => {
     locals.token = cookies.get("token") ?? null;
 
     if (locals.token) {
-        const request = await api(locals.token, `!GET /user`);
+        const request = await api(locals.token, `!GET /auth/user`);
         if (request.ok) locals.user = await request.json();
     }
 

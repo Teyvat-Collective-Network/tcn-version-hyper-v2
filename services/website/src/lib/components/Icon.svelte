@@ -6,4 +6,11 @@
     export { className as class };
 </script>
 
-<i {...$$restProps} class="fa-{brand ? 'brands' : 'solid'} fa-{icon} {className}" />
+<span {...$$restProps} class="fa-{brand ? 'brands' : 'solid'} fa-{icon} {className}"></span>
+
+<style lang="scss">
+    span {
+        width: 1em;
+        height: 1em;
+    }
+</style>
