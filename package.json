@@ -1,0 +1,12 @@
+{
+    "name": "tcn",
+    "workspaces": [
+        "backend",
+        "bot",
+        "global",
+        "web"
+    ],
+    "dependencies": {
+        "typescript": "^5.3.3"
+    }
+}

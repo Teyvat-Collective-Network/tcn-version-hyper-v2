@@ -1,0 +1,23 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "allowJs": true,
+        "skipLibCheck": true,
+        "strict": true,
+        "esModuleInterop": true,
+        "module": "esnext",
+        "moduleResolution": "bundler",
+        "target": "esnext",
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "incremental": true,
+        "downlevelIteration": true,
+        "outDir": "dist",
+        "paths": {
+            "@daedalus/*": ["packages/*"]
+        }
+    },
+    "files": ["./index.ts"],
+    "include": ["**/*.ts"],
+    "exclude": ["packages/dashboard/**/*.ts"]
+}

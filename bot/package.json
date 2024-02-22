@@ -1,0 +1,14 @@
+{
+    "name": "@tcn/bot",
+    "type": "module",
+    "scripts": {
+        "build": "tsc",
+        "start": "node dist/index.js"
+    },
+    "dependencies": {
+        "@trpc/server": "^11.0.0-next-beta.289",
+        "discord.js": "^14.14.1",
+        "dotenv": "^16.4.5",
+        "zod": "^3.22.4"
+    }
+}
