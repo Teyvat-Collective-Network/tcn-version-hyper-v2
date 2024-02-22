@@ -24,6 +24,7 @@ export const metadata: Metadata = {
         url: "https://teyvatcollective.network",
         images: { url: "https://teyvatcollective.network/favicon.ico" },
     },
+    twitter: { card: "summary" },
 };
 
 export const viewport: Viewport = {
