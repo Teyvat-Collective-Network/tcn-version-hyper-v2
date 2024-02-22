@@ -15,6 +15,20 @@
       "when": 1708577842662,
       "tag": "0001_sparkling_zombie",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1708642936794,
+      "tag": "0002_good_master_chief",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1708643775486,
+      "tag": "0003_messy_wallflower",
+      "breakpoints": true
     }
   ]
 }

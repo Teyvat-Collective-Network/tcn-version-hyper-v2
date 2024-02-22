@@ -38,3 +38,7 @@
 .fade-later {
     animation: fade-in 1500ms 1500ms 1 backwards;
 }
+
+.sliding {
+    transition: transform 500ms, opacity 500ms;
+}

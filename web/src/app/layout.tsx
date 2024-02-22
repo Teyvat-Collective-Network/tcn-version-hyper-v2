@@ -10,7 +10,7 @@ import "./globals.css";
 const rubik = Rubik({ subsets: ["latin"] });
 
 const description =
-    "Welcome to the Teyvat Collective Network! Our mission is to unite all mains servers across Teyvat and provide support and promote collaboration between partners.";
+    "Welcome to the Teyvat Collective Network! Our mission is to unite all mains servers across Teyvat, providing support for and promoting collaboration between partners.";
 
 export const metadata: Metadata = {
     metadataBase: new URL("https://teyvatcollective.network"),

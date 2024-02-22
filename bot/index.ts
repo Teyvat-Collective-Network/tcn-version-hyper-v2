@@ -4,6 +4,8 @@ import { createHTTPServer } from "@trpc/server/adapters/standalone";
 import routes from "./src/routes.js";
 import { router } from "./src/trpc.js";
 
+process.on("uncaughtException", console.error);
+
 const appRouter = router(routes);
 
 export type AppRouter = typeof appRouter;
