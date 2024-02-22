@@ -1,0 +1,40 @@
+@keyframes fade-out {
+    0% {
+    }
+    100% {
+        opacity: 20%;
+        filter: blur(4px);
+    }
+}
+
+#background {
+    animation: fade-out 1500ms 500ms 1 forwards;
+}
+
+@keyframes slide-down {
+    0% {
+        transform: translateY(-100%);
+    }
+    100% {
+    }
+}
+
+#navbar {
+    animation: slide-down 1000ms 1500ms 1 backwards;
+}
+
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+    }
+    100% {
+    }
+}
+
+#title {
+    animation: fade-in 1500ms 500ms 1 backwards;
+}
+
+.fade-later {
+    animation: fade-in 1500ms 1000ms 1 backwards;
+}

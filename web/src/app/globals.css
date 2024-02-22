@@ -85,7 +85,7 @@
     }
 }
 
-#main-body {
+#main-body > *:not(.no-fade-in) {
     animation: fade-in 600ms 100ms 1 backwards;
 }
 
