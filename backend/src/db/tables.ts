@@ -77,6 +77,7 @@ export const characters = mysqlTable("characters", {
     id: varchar("id", { length: 32 }).notNull().primaryKey(),
     displayName: varchar("display_name", { length: 32 }),
     fullName: varchar("full_name", { length: 64 }).notNull(),
+    image: text("image").notNull(),
 });
 
 export const characterAttributes = mysqlTable(

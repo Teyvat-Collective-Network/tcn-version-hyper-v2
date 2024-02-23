@@ -25,7 +25,6 @@ import {
     FaEarthAmericas,
     FaFileContract,
     FaFileLines,
-    FaFolderOpen,
     FaGavel,
     FaGear,
     FaGears,
@@ -116,7 +115,6 @@ export default function Navbar() {
             ? ([
                   ["", null, "Observers", "observers", true],
                   ["/admin/api-manager", FaGear, "API Manager", "observers"],
-                  ["/admin/files", FaFolderOpen, "Files", "observers"],
                   ["/admin/audit-logs", FaListOl, "Audit Logs", "observers"],
                   ["/admin/monitor", FaHeartPulse, "Monitor", "observers"],
                   ["/docs/observer-onboarding", FaHandshakeAngle, "Onboarding Guide", "observers"],

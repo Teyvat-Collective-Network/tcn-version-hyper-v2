@@ -5,6 +5,7 @@ import Image from "next/image";
 import { redirect } from "next/navigation";
 import { useState } from "react";
 import { FaChevronLeft, FaChevronRight, FaHouse, FaPaperPlane, FaSquare, FaSquareCheck } from "react-icons/fa6";
+import { Avatar, AvatarFallback, AvatarImage } from "../../components/ui/avatar";
 import { Button } from "../../components/ui/button";
 import Container from "../../components/ui/container";
 import { Input } from "../../components/ui/input";
@@ -111,9 +112,19 @@ export default function Apply() {
                 <div className="absolute sliding" style={pageStyle(page, 1)}>
                     <Container className="my-24">
                         <div className="center-col gap-8">
-                            <h1 className={`${font.className} text-center text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl`}>
-                                Applying for {guild?.name}
-                            </h1>
+                            <h1 className={`${font.className} text-center text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl`}>Applying for:</h1>
+                            <h2 className={`${font.className} text-center text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl center-row gap-4`}>
+                                <Avatar>
+                                    <AvatarImage src={guild?.icon ?? ""}></AvatarImage>
+                                    <AvatarFallback>
+                                        {guild?.name
+                                            .split("")
+                                            .filter((x) => x === x.toUpperCase() && x !== x.toLowerCase())
+                                            .join("") || guild?.name[0]}
+                                    </AvatarFallback>
+                                </Avatar>
+                                {guild?.name}
+                            </h2>
                             <h3 className="md:text-lg lg:text-xl xl:text-2xl">Please confirm your agreement to all of the following to proceed.</h3>
                             <div className="flex flex-col gap-4">
                                 <div className="center-row gap-4">
