@@ -5,6 +5,7 @@ import getUser from "@/lib/get-user";
 import type { Metadata, Viewport } from "next";
 import { Rubik } from "next/font/google";
 import Script from "next/script";
+import { TagsWrapper } from "../context/tags";
 import "./globals.css";
 
 const rubik = Rubik({ subsets: ["latin"] });
@@ -41,12 +42,14 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
             <body className={rubik.className}>
                 <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
                     <UserWrapper user={user}>
-                        <div className="min-h-[100vh] flex flex-col">
-                            <Navbar></Navbar>
-                            <div id="main-body" className="grow flex flex-col">
-                                {children}
+                        <TagsWrapper>
+                            <div className="min-h-[100vh] flex flex-col">
+                                <Navbar></Navbar>
+                                <div id="main-body" className="grow flex flex-col">
+                                    {children}
+                                </div>
                             </div>
-                        </div>
+                        </TagsWrapper>
                     </UserWrapper>
                 </ThemeProvider>
             </body>

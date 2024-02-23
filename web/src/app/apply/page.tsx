@@ -4,11 +4,12 @@ import { Architects_Daughter } from "next/font/google";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import { useState } from "react";
-import { FaChevronLeft, FaChevronRight, FaHouse, FaPaperPlane, FaSquare, FaSquareCheck } from "react-icons/fa6";
+import { FaChevronLeft, FaChevronRight, FaHashtag, FaHouse, FaPaperPlane, FaSquare, FaSquareCheck } from "react-icons/fa6";
 import { Avatar, AvatarFallback, AvatarImage } from "../../components/ui/avatar";
 import { Button } from "../../components/ui/button";
 import Container from "../../components/ui/container";
 import { Input } from "../../components/ui/input";
+import Mention from "../../components/ui/mention";
 import NormalSelect from "../../components/ui/normal-select";
 import { Textarea } from "../../components/ui/textarea";
 import { useUserContext } from "../../context/user";
@@ -167,8 +168,11 @@ export default function Apply() {
                                     </Button>
                                     <p>
                                         <span className="text-xl">
-                                            I agree to follow <b>#network-events</b> publicly to cross-promote TCN server events and post crucial TCN
-                                            announcements.
+                                            I agree to follow{" "}
+                                            <Mention>
+                                                <FaHashtag></FaHashtag> network-events
+                                            </Mention>{" "}
+                                            publicly to cross-promote TCN server events and post crucial TCN announcements.
                                         </span>
                                     </p>
                                 </div>

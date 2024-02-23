@@ -22,7 +22,7 @@ export default function About() {
             <div className="flex flex-col gap-8">
                 <h1 className="text-5xl">About the TCN</h1>
                 <SectionLink id="what">
-                    <h2 className="text-3xl">What is the TCN?</h2>
+                    <h2 className="text-4xl">What is the TCN?</h2>
                 </SectionLink>
                 <p>
                     The Teyvat Collective Network, also known as the TCN, is a network of high-quality Genshin Impact Discord servers dedicated to fostering
@@ -30,7 +30,7 @@ export default function About() {
                     and maintaining healthy and safe communities for Genshin Impact fans to find a home in on Discord.
                 </p>
                 <SectionLink id="organization">
-                    <h2 className="text-3xl">Organization</h2>
+                    <h2 className="text-4xl">Organization</h2>
                 </SectionLink>
                 <p>
                     The TCN does not enforce any particular structure on its member servers. TCN servers are not required to change their server setup, follow a
@@ -61,7 +61,7 @@ export default function About() {
                     </p>
                 </Panel>
                 <SectionLink id="benefits">
-                    <h2 className="text-3xl">Benefits of the TCN</h2>
+                    <h2 className="text-4xl">Benefits of the TCN</h2>
                 </SectionLink>
                 <Panel className="max-w-[max-content]">
                     <h3 className="center-row gap-4 text-2xl">
@@ -120,7 +120,7 @@ export default function About() {
                     </p>
                 </Panel>
                 <SectionLink id="core-values">
-                    <h2 className="text-3xl">Our Core Values</h2>
+                    <h2 className="text-4xl">Our Core Values</h2>
                 </SectionLink>
                 <Panel className="max-w-[max-content]">
                     <h3 className="center-row gap-4 text-2xl">

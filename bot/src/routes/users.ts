@@ -27,4 +27,10 @@ export default {
             staff,
         };
     }),
+    getTag: proc.input(snowflake).query(async ({ input: id }) => {
+        const user = await client.users.fetch(id).catch(() => null);
+        if (!user) return `Unknown User: ${id}`;
+
+        return user.tag;
+    }),
 } as const;

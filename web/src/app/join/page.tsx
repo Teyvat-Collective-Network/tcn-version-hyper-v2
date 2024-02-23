@@ -1,10 +1,22 @@
 import Image from "next/image";
-import { FaCheckToSlot, FaEye, FaFolderTree, FaHandshakeAngle, FaHeartCrack, FaListCheck, FaPencil, FaTriangleExclamation, FaXmark } from "react-icons/fa6";
+import {
+    FaCheckToSlot,
+    FaEye,
+    FaFolderTree,
+    FaHandshakeAngle,
+    FaHashtag,
+    FaHeartCrack,
+    FaListCheck,
+    FaPencil,
+    FaTriangleExclamation,
+    FaXmark,
+} from "react-icons/fa6";
 import { Button } from "../../components/ui/button";
 import Container from "../../components/ui/container";
 import Panel from "../../components/ui/panel";
 import SectionLink from "../../components/ui/section-link";
 import { Separator } from "../../components/ui/separator";
+import Mention from "../../components/ui/mention";
 
 export default function Join() {
     return (
@@ -20,7 +32,7 @@ export default function Join() {
                     <Button>Apply Here!</Button>
                 </a>
                 <SectionLink id="induction-process">
-                    <h2 className="text-3xl">Induction Process</h2>
+                    <h2 className="text-4xl">Induction Process</h2>
                 </SectionLink>
                 <Image src="https://i.imgur.com/r32P1Ay.png" alt="Induction Process Flowchart" width={600} height={400}></Image>
                 <Panel className="max-w-[max-content]">
@@ -90,7 +102,7 @@ export default function Join() {
                     </p>
                 </Panel>
                 <SectionLink id="tcn-requirements">
-                    <h2 className="text-3xl">What does the TCN require?</h2>
+                    <h2 className="text-4xl">What does the TCN require?</h2>
                 </SectionLink>
                 <p>
                     Not much. Observation is usually very smooth and few servers get rejected. As long as you have a civil environment, you will probably pass
@@ -103,8 +115,12 @@ export default function Join() {
                     inappropriate conduct).
                 </p>
                 <p>
-                    Additionally, we require that you keep an updated list of TCN servers in your server and follow our <b>#network-events</b> channel, as
-                    cross-promotion is a part of our benefits. Otherwise, all other features like global chat, banshares, etc. are completely optional.
+                    Additionally, we require that you keep an updated list of TCN servers in your server and follow our{" "}
+                    <Mention>
+                        <FaHashtag></FaHashtag> network-events
+                    </Mention>{" "}
+                    channel, as cross-promotion is a part of our benefits. Otherwise, all other features like global chat, banshares, etc. are completely
+                    optional.
                 </p>
                 <p>
                     We do not place restrictions on how you should run your server or force you to follow a particular structure (in fact, we do not have a
@@ -112,7 +128,7 @@ export default function Join() {
                     removal.
                 </p>
                 <SectionLink id="why-reject">
-                    <h2 className="text-3xl">What are some reasons for rejection?</h2>
+                    <h2 className="text-4xl">What are some reasons for rejection?</h2>
                 </SectionLink>
                 <p>
                     Servers may be rejected after or during observation or denied observation altogether for a variety of reasons. These are some common

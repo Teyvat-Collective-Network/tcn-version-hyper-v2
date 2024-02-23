@@ -1,4 +1,6 @@
+import { FaHashtag } from "react-icons/fa6";
 import Container from "../../../components/ui/container";
+import Mention from "../../../components/ui/mention";
 import SectionLink from "../../../components/ui/section-link";
 
 export default function Constitution() {
@@ -147,7 +149,11 @@ export default function Constitution() {
                 <h4 className="text-2xl">Network Events</h4>
                 <ul>
                     <li>
-                        Servers must follow <b>#network-events</b> in a channel visible to the general public of the server.
+                        Servers must follow{" "}
+                        <Mention>
+                            <FaHashtag></FaHashtag> network-events
+                        </Mention>{" "}
+                        in a channel visible to the general public of the server.
                     </li>
                     <li>
                         Under{" "}
@@ -569,8 +575,11 @@ export default function Constitution() {
                 </SectionLink>
                 <ul>
                     <li>
-                        Events involving at least one TCN server may be posted to <b>#network-events</b> and published across the network. The webhook URL is
-                        pinned in the channel.
+                        Events involving at least one TCN server may be posted to{" "}
+                        <Mention>
+                            <FaHashtag></FaHashtag> network-events
+                        </Mention>{" "}
+                        and published across the network. The webhook URL is pinned in the channel.
                     </li>
                     <li>
                         Events must be SFW and must follow TCN rules, Discord&apos;s Terms of Service and Community Guidelines, and Genshin Impact&apos;s Terms
