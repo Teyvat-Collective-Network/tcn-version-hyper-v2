@@ -75,6 +75,10 @@
     }
 }
 
+html {
+    @apply scroll-smooth;
+}
+
 @keyframes fade-in {
     0% {
         opacity: 0%;
@@ -114,6 +118,10 @@ code::after {
 
 .prose {
     @apply text-primary;
+}
+
+ul {
+    @apply list-disc pl-8;
 }
 
 p:not(.not-prose),
