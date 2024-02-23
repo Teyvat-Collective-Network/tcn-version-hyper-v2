@@ -5,6 +5,7 @@ import getUser from "@/lib/get-user";
 import type { Metadata, Viewport } from "next";
 import { Rubik } from "next/font/google";
 import Script from "next/script";
+import { Toaster } from "../components/ui/toaster";
 import { TagsWrapper } from "../context/tags";
 import "./globals.css";
 
@@ -49,6 +50,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
                                     {children}
                                 </div>
                             </div>
+                            <Toaster></Toaster>
                         </TagsWrapper>
                     </UserWrapper>
                 </ThemeProvider>

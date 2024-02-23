@@ -1,6 +1,6 @@
 "use server";
 
-import api from "@tcn/bot/src/api";
+import api from "../../lib/trpc";
 import PartnersBody from "./page-body";
 
 export default async function Partners() {

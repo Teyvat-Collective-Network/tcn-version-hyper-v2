@@ -16,7 +16,7 @@ export async function GET(req: Request) {
             client_id: process.env.CLIENT_ID!,
             client_secret: process.env.SECRET!,
             grant_type: "authorization_code",
-            redirect_uri: `${process.env.DOMAIN}/auth/callback`,
+            redirect_uri: `${process.env.NEXT_PUBLIC_DOMAIN}/auth/callback`,
             code,
             scope: "identify guilds",
         }),

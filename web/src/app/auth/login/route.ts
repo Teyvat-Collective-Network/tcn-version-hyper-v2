@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 const DISCORD_ENDPOINT = (path: string, state: string) =>
     `${process.env.DISCORD_API}/oauth2/authorize?${new URLSearchParams({
         client_id: process.env.CLIENT_ID!,
-        redirect_uri: `${process.env.DOMAIN}/auth/callback`,
+        redirect_uri: `${process.env.NEXT_PUBLIC_DOMAIN}/auth/callback`,
         response_type: "code",
         scope: "identify guilds",
         state: state + path,

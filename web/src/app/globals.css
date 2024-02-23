@@ -93,9 +93,20 @@ html {
     animation: fade-in 600ms 100ms 1 backwards;
 }
 
+* {
+    scroll-margin-top: 8rem;
+}
+
 a {
-    color: hsl(var(--primary)) !important;
     text-decoration: none !important;
+}
+
+a:not(.muted) {
+    color: hsl(var(--primary)) !important;
+}
+
+a.muted {
+    color: hsl(var(--muted-foreground)) !important;
 }
 
 a.link {
@@ -122,6 +133,10 @@ code::after {
 
 ul {
     @apply list-disc pl-8;
+}
+
+ol {
+    @apply list-decimal pl-8;
 }
 
 p:not(.not-prose),
