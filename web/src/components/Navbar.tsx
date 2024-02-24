@@ -17,7 +17,6 @@ import {
     FaCircleCheck,
     FaCircleInfo,
     FaClipboard,
-    FaClock,
     FaClockRotateLeft,
     FaDiscord,
     FaDoorClosed,
@@ -32,18 +31,15 @@ import {
     FaHandshakeAngle,
     FaHeartPulse,
     FaHouse,
-    FaLink,
     FaList,
     FaListOl,
-    FaMessage,
     FaMoon,
     FaRobot,
     FaShieldHalved,
-    FaSnowflake,
     FaSun,
     FaTowerBroadcast,
     FaTowerCell,
-    FaUpload,
+    FaUpload
 } from "react-icons/fa6";
 import { IconType } from "react-icons/lib";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
@@ -91,12 +87,7 @@ export default function Navbar() {
         ["/info/other-bots", FaRobot, "Other Bots", "info"],
         ["/info/discord", FaDiscord, "Discord Guides", "info"],
         ["/info/glossary", FaBook, "Glossary", "info"],
-        ["/info/exit-procedure", FaDoorClosed, "Exit Procedure", "info"],
-        ["", null, "Tools", "tools", true],
-        ["/tools/embeds", FaMessage, "Embeds", "tools"],
-        ["/tools/timestamps", FaClock, "Timestamp Generator", "tools"],
-        ["/tools/snowflakes", FaSnowflake, "Snowflakes (IDs)", "tools"],
-        ["/tools/url-shortener", FaLink, "URL Shortener", "tools"],
+        ["/info/exit-procedure", FaDoorClosed, "Exit Procedure", "info"], 
         ...(user?.staff
             ? ([
                   ["", null, "Network Staff", "staff", true],

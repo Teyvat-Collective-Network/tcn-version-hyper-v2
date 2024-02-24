@@ -67,35 +67,6 @@ export default function WebhooksGuide() {
                 <SectionLink id="services">
                     <h2 className="text-4xl">Webhhook Services</h2>
                 </SectionLink>
-                <SectionLink id="tcn-embeds">
-                    <h3 className="text-3xl">TCN Embed Tool</h3>
-                </SectionLink>
-                <p>
-                    <a href={`${process.env.NEXT_PUBLIC_DOMAIN}/tools/embeds`} className="link" target="_blank">
-                        {process.env.NEXT_PUBLIC_DOMAIN}/tools/embeds
-                    </a>
-                </p>
-                <p>
-                    The TCN Embed Tool has an example on the landing page. This is a TOML-based message editor that isn&apos;t the most convenient to use but is
-                    rigorously defined, allows for a much more readable text representation than raw JSON, and is the basis for autosync templates.
-                </p>
-                <div className="grid grid-cols-[max-content_1fr] items-center gap-4">
-                    <FaCheck color="green"></FaCheck> New Forum Posts
-                    <FaCheck color="green"></FaCheck> Post To Threads
-                    <FaXmark color="red"></FaXmark> Components (Buttons &amp; Dropdown Menus)
-                </div>
-                <p>
-                    <b>Careful!</b> TCN Embed Tool&apos;s share links expire after one week of not being accessed. If you want to keep a permanent link,
-                    copy-paste the link from the browser bar and shorten it using something like the{" "}
-                    <a href="/tools/url-shortener" className="link" target="_blank">
-                        TCN URL Shortener
-                    </a>{" "}
-                    (council-only) or{" "}
-                    <a href="https://tinyurl.com" className="link" target="_blank">
-                        TinyURL
-                    </a>
-                    .
-                </p>
                 <SectionLink id="leaf-embeds">
                     <h3 className="text-3xl">Leaf Embeds</h3>
                 </SectionLink>
