@@ -38,4 +38,9 @@ export default {
         .mutation(async ({ input }) => {
             await db.insert(tables.banshares).values({ ...input, created: new Date(), reminded: new Date(), status: "pending" });
         }),
+    changeBanshareSeverity: proc
+        .input(z.object({ message: snowflake, severity: z.enum(["P0", "P1", "P2", "DM"]) }))
+        .mutation(async ({ input: { message, severity } }) => {
+            await db.update(tables.banshares).set({ severity }).where(eq(tables.banshares.message, message));
+        }),
 } as const;

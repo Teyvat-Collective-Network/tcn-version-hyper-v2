@@ -1,9 +1,12 @@
 import { Channel, Client, Events, ForumChannel, IntentsBitField, TextChannel } from "discord.js";
+import interactions from "./interactions.js";
 
 const Intents = IntentsBitField.Flags;
 
-const bot = new Client({ intents: Intents.Guilds | Intents.GuildMembers, sweepers: {}, allowedMentions: { parse: [] } });
-const promise = new Promise((r) => bot.on(Events.ClientReady, r));
+const bot = new Client({ intents: Intents.Guilds | Intents.GuildMembers | Intents.MessageContent, sweepers: {}, allowedMentions: { parse: [] } });
+const promise = new Promise<Client<true>>((r) => bot.on(Events.ClientReady, r));
+
+promise.then((client) => interactions(client));
 
 bot.login(process.env.TOKEN);
 

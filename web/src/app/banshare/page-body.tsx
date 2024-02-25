@@ -101,7 +101,18 @@ export default function BanshareFormBody({ user, guilds }: { user: User; guilds:
                                 <FaHouse></FaHouse> Return Home
                             </Button>
                         </a>
-                        <Button className="center-row gap-2" onClick={() => setDone(false)}>
+                        <Button
+                            className="center-row gap-2"
+                            onClick={() => {
+                                setIds("");
+                                setReason("");
+                                setEvidence("");
+                                setServer("");
+                                setSeverity("");
+                                setUrgent(false);
+                                setDone(false);
+                            }}
+                        >
                             <FaRepeat></FaRepeat> Submit Another
                         </Button>
                     </div>
