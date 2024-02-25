@@ -66,7 +66,7 @@ export const banshares = mysqlTable("banshares", {
     reason: text("reason").notNull(),
     evidence: text("evidence").notNull(),
     severity: mysqlEnum("severity", ["DM", "P0", "P1", "P2"]).notNull(),
-    status: mysqlEnum("status", ["pending", "rejected", "published", "rescinded"]),
+    status: mysqlEnum("status", ["pending", "rejected", "published", "rescinded"]).notNull(),
     urgent: boolean("urgent").notNull(),
     rejecter: varchar("rejecter", { length: 20 }),
     publisher: varchar("publisher", { length: 20 }),

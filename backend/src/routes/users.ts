@@ -1,4 +1,5 @@
-import { eq } from "drizzle-orm";
+import { and, count, eq, or } from "drizzle-orm";
+import { z } from "zod";
 import db from "../db/db.js";
 import { tables } from "../db/index.js";
 import { snowflake } from "../schemas.js";
@@ -12,5 +13,23 @@ export default {
     getObservers: proc.query(async () => {
         const ids = (await db.select({ id: tables.users.id }).from(tables.users).where(eq(tables.users.observer, true))).map(({ id }) => id);
         return [process.env.OWNER!, ...ids.filter((x) => x !== process.env.OWNER)];
+    }),
+    isStaffOf: proc.input(z.object({ user: snowflake, guild: snowflake })).query(async ({ input: { user, guild } }) => {
+        const query = await db
+            .select({ count: count() })
+            .from(tables.guilds)
+            .leftJoin(tables.guildUsers, eq(tables.guilds.id, tables.guildUsers.guild))
+            .where(
+                and(
+                    eq(tables.guilds.id, guild),
+                    or(
+                        eq(tables.guilds.owner, user),
+                        eq(tables.guilds.advisor, user),
+                        and(eq(tables.guildUsers.user, user), eq(tables.guildUsers.staff, true)),
+                    ),
+                ),
+            );
+
+        return query[0].count > 0;
     }),
 } as const;

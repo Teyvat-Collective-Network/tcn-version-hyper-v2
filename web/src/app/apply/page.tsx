@@ -3,8 +3,8 @@
 import { Architects_Daughter } from "next/font/google";
 import Image from "next/image";
 import { redirect } from "next/navigation";
-import { useState } from "react";
-import { FaChevronLeft, FaChevronRight, FaHashtag, FaHouse, FaPaperPlane, FaSquare, FaSquareCheck } from "react-icons/fa6";
+import { useEffect, useState } from "react";
+import { FaAt, FaChevronLeft, FaChevronRight, FaHashtag, FaHouse, FaPaperPlane, FaSquare, FaSquareCheck } from "react-icons/fa6";
 import { Avatar, AvatarFallback, AvatarImage } from "../../components/ui/avatar";
 import { Button } from "../../components/ui/button";
 import Container from "../../components/ui/container";
@@ -37,6 +37,10 @@ export default function Apply() {
     const [history, setHistory] = useState<string>("");
     const [additional, setAdditional] = useState<string>("");
     const [submitting, setSubmitting] = useState<boolean>(false);
+
+    useEffect(() => {
+        window.onbeforeunload = (e) => e.preventDefault();
+    }, [page]);
 
     if (!user) return redirect("/auth/login?redirect=/apply");
 
@@ -98,6 +102,16 @@ export default function Apply() {
                             <h2 className={`${font.className} fade-later text-center text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl`}>
                                 Enter your server&apos;s invite to get started
                             </h2>
+                            <p className="fade-later">
+                                You&apos;re logged in as{" "}
+                                <Mention>
+                                    <FaAt></FaAt> {user.name}
+                                </Mention>{" "}
+                                and your user ID will be submitted with this form. Not you?{" "}
+                                <a href="/auth/logout?redirect=/apply" className="link">
+                                    Log Out
+                                </a>
+                            </p>
                             <Input
                                 className="fade-later bg-background max-w-[40rem] h-12 text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl"
                                 value={invite}
