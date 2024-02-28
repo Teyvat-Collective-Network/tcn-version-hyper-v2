@@ -14,6 +14,12 @@ export default {
         const ids = (await db.select({ id: tables.users.id }).from(tables.users).where(eq(tables.users.observer, true))).map(({ id }) => id);
         return [process.env.OWNER!, ...ids.filter((x) => x !== process.env.OWNER)];
     }),
+    isObserver: proc.input(snowflake).query(async ({ input: user }) => {
+        if (user === process.env.OWNER) return true;
+        const query = await db.select({ observer: tables.users.observer }).from(tables.users).where(eq(tables.users.id, user));
+        const item = query.at(0);
+        return item ? item.observer : false;
+    }),
     isStaffOf: proc.input(z.object({ user: snowflake, guild: snowflake })).query(async ({ input: { user, guild } }) => {
         const query = await db
             .select({ count: count() })

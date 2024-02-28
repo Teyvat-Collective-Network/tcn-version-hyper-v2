@@ -14,8 +14,8 @@ export function embed(title: string, description: string, color: number, ephemer
 }
 
 export const template = {
-    success: (body: string, ephemeral?: boolean) => embed("OK!", body, Colors.Green, ephemeral),
-    error: (body: string, ephemeral?: boolean) => embed("Error!", body, Colors.Red, ephemeral),
+    success: (body: string, ephemeral?: boolean) => embed("OK", body, Colors.Green, ephemeral),
+    error: (body: string, ephemeral?: boolean) => embed("Error", body, Colors.Red, ephemeral),
     info: (body: string, ephemeral?: boolean) => embed("Info", body, Colors.Blue, ephemeral),
     progress: (body: string, ephemeral?: boolean) => embed("In Progress", body, Colors.Purple, ephemeral),
     logerror: (context: string, body: string, ephemeral?: boolean) => embed(`Bot Error: ${context}`, body, Colors.Red, ephemeral),
