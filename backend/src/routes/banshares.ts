@@ -39,8 +39,21 @@ export default {
             await db.insert(tables.banshares).values({ ...input, created: new Date(), reminded: new Date(), status: "pending" });
         }),
     changeBanshareSeverity: proc
-        .input(z.object({ message: snowflake, severity: z.enum(["P0", "P1", "P2", "DM"]) }))
-        .mutation(async ({ input: { message, severity } }) => {
+        .input(z.object({ user: snowflake, message: snowflake, severity: z.enum(["P0", "P1", "P2", "DM"]) }))
+        .mutation(async ({ input: { user, message, severity } }) => {
             await db.update(tables.banshares).set({ severity }).where(eq(tables.banshares.message, message));
+            await db.insert(tables.auditLogs).values({ action: "banshare/change-severity", user, data: { message, severity } });
         }),
+    rejectBanshare: proc.input(z.object({ message: snowflake, user: snowflake })).mutation(async ({ input: { message, user } }) => {
+        const { rowsAffected } = await db
+            .update(tables.banshares)
+            .set({ status: "rejected" })
+            .where(and(eq(tables.banshares.message, message), eq(tables.banshares.status, "pending")));
+
+        if (rowsAffected === 0) return false;
+
+        await db.insert(tables.auditLogs).values({ action: "banshare/reject", user, data: { message } });
+
+        return true;
+    }),
 } as const;

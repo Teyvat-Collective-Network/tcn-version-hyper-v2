@@ -1,6 +1,5 @@
 {
     "compilerOptions": {
-        "baseUrl": ".",
         "allowJs": true,
         "skipLibCheck": true,
         "strict": true,
@@ -12,10 +11,7 @@
         "isolatedModules": true,
         "incremental": true,
         "downlevelIteration": true,
-        "outDir": "dist",
-        "paths": {
-            "@daedalus/*": ["packages/*"]
-        }
+        "outDir": "dist"
     },
     "files": ["./index.ts"],
     "include": ["**/*.ts"],

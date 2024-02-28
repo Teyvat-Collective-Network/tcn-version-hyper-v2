@@ -3,7 +3,11 @@ import interactions from "./interactions.js";
 
 const Intents = IntentsBitField.Flags;
 
-const bot = new Client({ intents: Intents.Guilds | Intents.GuildMembers | Intents.MessageContent, sweepers: {}, allowedMentions: { parse: [] } });
+const bot = new Client({
+    intents: Intents.Guilds | Intents.GuildMembers | Intents.MessageContent,
+    sweepers: { messages: { lifetime: 86400, interval: 600 } },
+    allowedMentions: { parse: [] },
+});
 const promise = new Promise<Client<true>>((r) => bot.on(Events.ClientReady, r));
 
 promise.then((client) => interactions(client));
@@ -22,6 +26,7 @@ type Channels = {
     banshares: TextChannel;
     execManagement: TextChannel;
     officialBusiness: TextChannel;
+    logs: TextChannel;
 };
 
 const keys: Record<keyof Channels, string> = {
@@ -29,6 +34,7 @@ const keys: Record<keyof Channels, string> = {
     banshares: "CH_BANSHARES",
     execManagement: "CH_EXEC_MANAGEMENT",
     officialBusiness: "CH_OFFICIAL_BUSINESS",
+    logs: "CH_LOGS",
 };
 
 export const channels = {} as Channels;

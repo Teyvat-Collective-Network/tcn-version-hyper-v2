@@ -125,7 +125,7 @@ export default function Navbar() {
         <>
             <nav
                 id="navbar"
-                className="z-10 fixed w-full center-row justify-between border-b border-border overflow-hidden dark:bg-background/75 backdrop-blur-[2px]"
+                className="z-10 fixed w-full center-row justify-between border-b border-border overflow-hidden bg-background/50 dark:bg-background/75 backdrop-blur-[4px]"
             >
                 <div className="center-row">
                     <a href="/" className="center-row gap-4 px-4 py-2 hover:bg-foreground/5">

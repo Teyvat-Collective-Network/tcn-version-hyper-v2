@@ -19,12 +19,24 @@ export const auditLogs = mysqlTable(
         uuid: int("uuid").notNull().autoincrement().primaryKey(),
         action: varchar("action", { length: 32 }).notNull(),
         user: varchar("user", { length: 32 }).notNull(),
-        token: varchar("token", { length: 256 }),
         time: timestamp("time").notNull().defaultNow(),
         reason: text("reason"),
         data: json("data").notNull(),
     },
     (t) => ({
+        idx_time: index("idx_time").on(t.time),
+    }),
+);
+
+export const auditLogReasonHistory = mysqlTable(
+    "audit-log-reason-history",
+    {
+        uuid: int("uuid").notNull(),
+        reason: text("reason"),
+        time: timestamp("time").notNull().defaultNow(),
+    },
+    (t) => ({
+        idx_uuid_time: index("idx_uuid_time").on(t.uuid, t.time),
         idx_time: index("idx_time").on(t.time),
     }),
 );

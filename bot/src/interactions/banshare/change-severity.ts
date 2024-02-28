@@ -4,7 +4,7 @@ import api from "../../api.js";
 export default async function (button: ButtonInteraction, severity: "P0" | "P1" | "P2" | "DM") {
     await button.deferUpdate();
 
-    await api.changeBanshareSeverity.mutate({ message: button.message.id, severity });
+    await api.changeBanshareSeverity.mutate({ user: button.user.id, message: button.message.id, severity });
 
     await button.editReply({
         embeds: [
