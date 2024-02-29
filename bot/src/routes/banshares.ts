@@ -1,7 +1,7 @@
-import { ButtonStyle, ComponentType } from "discord.js";
 import { z } from "zod";
 import api from "../api.js";
 import bot, { channels } from "../bot.js";
+import { banshareComponents } from "../lib/banshares.js";
 import { snowflake } from "../schemas.js";
 import { proc } from "../trpc.js";
 
@@ -68,38 +68,7 @@ export default {
                         ],
                     },
                 ],
-                components: [
-                    {
-                        type: ComponentType.ActionRow,
-                        components: (
-                            [
-                                ["P0", ButtonStyle.Danger],
-                                ["P1", ButtonStyle.Primary],
-                                ["P2", ButtonStyle.Success],
-                                ["DM", ButtonStyle.Secondary],
-                            ] as const
-                        ).map(([label, style]) => ({
-                            type: ComponentType.Button,
-                            style,
-                            customId: `::banshare/change-severity:${label}`,
-                            label,
-                            disabled: severity === label,
-                        })),
-                    },
-                    {
-                        type: ComponentType.ActionRow,
-                        components: [
-                            {
-                                type: ComponentType.Button,
-                                style: ButtonStyle.Success,
-                                customId: "::banshare/publish:global",
-                                label: "Publish & Ban from Global Chat",
-                            },
-                            { type: ComponentType.Button, style: ButtonStyle.Primary, customId: "::banshare/publish:normal", label: "Publish" },
-                            { type: ComponentType.Button, style: ButtonStyle.Danger, customId: "::banshare/reject", label: "Reject" },
-                        ],
-                    },
-                ],
+                components: banshareComponents(severity),
             });
 
             await api.uploadBanshare.mutate({ message: message.id, author, guild: server, ids, reason, evidence, severity, urgent });

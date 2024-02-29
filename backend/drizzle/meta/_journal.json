@@ -43,6 +43,13 @@
       "when": 1709163453632,
       "tag": "0005_icy_molly_hayes",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1709239603834,
+      "tag": "0006_free_steel_serpent",
+      "breakpoints": true
     }
   ]
 }

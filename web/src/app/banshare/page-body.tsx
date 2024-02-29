@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { DrawerDialog } from "@/components/ui/drawer-dialog";
+import { useEffect, useMemo, useState } from "react";
 import { FaAt, FaHouse, FaRepeat } from "react-icons/fa6";
 import { Button } from "../../components/ui/button";
 import { Checkbox } from "../../components/ui/checkbox";
@@ -12,7 +13,7 @@ import NormalSelect from "../../components/ui/normal-select";
 import Panel from "../../components/ui/panel";
 import { Separator } from "../../components/ui/separator";
 import { Textarea } from "../../components/ui/textarea";
-import { submitBanshare } from "../../lib/actions";
+import { getTag, submitBanshare } from "../../lib/actions";
 import { User } from "../../lib/types";
 
 export default function BanshareFormBody({ user, guilds }: { user: User; guilds: { name: string; id: string }[] }) {
@@ -23,10 +24,25 @@ export default function BanshareFormBody({ user, guilds }: { user: User; guilds:
     const [severity, setSeverity] = useState<"P0" | "P1" | "P2" | "DM" | "">("");
     const [urgent, setUrgent] = useState<boolean>(false);
     const [done, setDone] = useState<boolean>(false);
+    const [tags, setTags] = useState<Record<string, string>>({});
+    const [running, setRunning] = useState<boolean>();
+
+    const matches = useMemo(() => ids.match(/^\s*([1-9][0-9]{16,19}\s+)*[1-9][0-9]{16,19}\s*$/), [ids]);
+    const list = useMemo(() => ids.trim().split(/\s+/), [ids]);
 
     useEffect(() => {
         window.onbeforeunload = done ? () => null : (e) => e.preventDefault();
     }, [done]);
+
+    async function fetchCycle(index: number = 0) {
+        while (index < list.length && list[index] in tags) index++;
+        if (index >= list.length) return;
+
+        const tag = await getTag(list[index]);
+        setTags((tags) => ({ ...tags, [list[index]]: tag }));
+
+        setTimeout(() => fetchCycle(index + 1));
+    }
 
     if (guilds.length === 0)
         return (
@@ -145,6 +161,50 @@ export default function BanshareFormBody({ user, guilds }: { user: User; guilds:
                     <Panel>
                         <h3 className="text-2xl">ID(s) of the offender(s)</h3>
                         <Input value={ids} onChange={({ currentTarget: { value } }) => setIds(value)} placeholder="Space-separated ID list"></Input>
+                        <DrawerDialog
+                            trigger={
+                                ids.trim().length > 0 ? (
+                                    <div>
+                                        <Button>Check IDs</Button>
+                                    </div>
+                                ) : (
+                                    <></>
+                                )
+                            }
+                            onOpenChange={(open) => {
+                                if (open && matches) {
+                                    setRunning(true);
+                                    fetchCycle();
+                                } else setRunning(false);
+                            }}
+                        >
+                            {matches ? (
+                                <ul>
+                                    {list.map((id, i) => (
+                                        <li key={i}>
+                                            <code>{id}</code> &mdash; {tags[id] ?? <span className="text-muted-foreground">(Loading...)</span>}
+                                        </li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                <>
+                                    <p>
+                                        Your IDs appear invalid (if you are pasting a link, consider pasting the IDs themselves and letting the banshare system
+                                        parse them and upload its own document).
+                                    </p>
+                                    <p>
+                                        Specifically, the following looks invalid:{" "}
+                                        <code>
+                                            {ids
+                                                .trim()
+                                                .split(/\s+/)
+                                                .find((x) => !x.match(/^[1-9][0-9]{16,19}$/))}
+                                        </code>{" "}
+                                        (expected a 17-20 digit number).
+                                    </p>
+                                </>
+                            )}
+                        </DrawerDialog>
                         <Separator></Separator>
                         <h3 className="text-2xl">Reason</h3>
                         <p>

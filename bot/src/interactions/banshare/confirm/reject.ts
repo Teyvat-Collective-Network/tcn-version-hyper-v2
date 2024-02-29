@@ -9,7 +9,7 @@ export default async function (button: ButtonInteraction) {
     const message = await button.message.fetchReference().catch(() => null);
     if (!message) throw "An unexpected error has occurred.";
 
-    const rejected = await api.rejectBanshare.mutate({ user: button.user.id, message: message.id });
+    const rejected = await api.transitionBanshare.mutate({ user: button.user.id, message: message.id, action: "reject" });
     if (!rejected) throw "That banshare is no longer pending.";
 
     await message.edit(greyButton("Rejected", "red"));

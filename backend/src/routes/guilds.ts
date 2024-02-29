@@ -30,6 +30,10 @@ export default {
                 or(eq(tables.guilds.owner, user), eq(tables.guilds.advisor, user), and(eq(tables.guildUsers.user, user), eq(tables.guildUsers.staff, true))),
             );
     }),
+    isTCNGuild: proc.input(snowflake).query(async ({ input: id }) => {
+        const query = await db.select({ count: count() }).from(tables.guilds).where(eq(tables.guilds.id, id));
+        return query[0].count > 0;
+    }),
     getGuild: proc.input(snowflake).query(async ({ input: id }) => {
         return (await db.select().from(tables.guilds).where(eq(tables.guilds.id, id))).at(0);
     }),

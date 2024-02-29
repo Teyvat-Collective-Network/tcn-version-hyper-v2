@@ -57,6 +57,19 @@ export const banshareSettings = mysqlTable("banshare_settings", {
     channel: varchar("channel", { length: 20 }),
 });
 
+export const banshareAutobanSettings = mysqlTable(
+    "banshare_autoban_settings",
+    {
+        guild: varchar("guild", { length: 20 }).notNull(),
+        severity: mysqlEnum("severity", ["DM", "P0", "P1", "P2"]).notNull(),
+        member: boolean("member").notNull(),
+        nonmember: boolean("nonmember").notNull(),
+    },
+    (t) => ({
+        pk_guild_severity: primaryKey({ name: "pk_guild_severity", columns: [t.guild, t.severity] }),
+    }),
+);
+
 export const banshareLogs = mysqlTable(
     "banshare_logs",
     {
