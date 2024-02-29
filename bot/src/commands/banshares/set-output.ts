@@ -1,4 +1,6 @@
 import { ApplicationCommandOptionType, Channel, ChannelType, ChatInputCommandInteraction } from "discord.js";
+import api from "../../api.js";
+import { template } from "../../lib/format.js";
 import { CommandData } from "../../types.js";
 
 export const command: CommandData = {
@@ -16,5 +18,9 @@ export const command: CommandData = {
 };
 
 export default async function (cmd: ChatInputCommandInteraction, channel?: Channel) {
-    return "Not Implemented";
+    if (cmd.user.id !== cmd.guild?.ownerId && !(await api.isObserver.query(cmd.user.id)))
+        throw "Only the owner of this server may update the banshare settings.";
+
+    await api.setBanshareChannel.mutate({ guild: cmd.guild!.id, channel: cmd.channel!.id });
+    return template.success(channel ? `Banshares will now be posted to ${channel}.` : "Banshares will no longer be posted in this server.");
 }

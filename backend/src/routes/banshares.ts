@@ -44,6 +44,9 @@ export default {
             await db.update(tables.banshares).set({ severity }).where(eq(tables.banshares.message, message));
             await db.insert(tables.auditLogs).values({ action: "banshare/change-severity", user, data: { message, severity } });
         }),
+    setBanshareChannel: proc.input(z.object({ guild: snowflake, channel: snowflake.nullable() })).mutation(async ({ input: { guild, channel } }) => {
+        await db.insert(tables.banshareSettings).values({ guild, channel }).onDuplicateKeyUpdate({ set: { channel } });
+    }),
     rejectBanshare: proc.input(z.object({ message: snowflake, user: snowflake })).mutation(async ({ input: { message, user } }) => {
         const { rowsAffected } = await db
             .update(tables.banshares)

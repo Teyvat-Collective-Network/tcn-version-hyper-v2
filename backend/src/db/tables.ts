@@ -51,9 +51,9 @@ export const autosync = mysqlTable("autosync", {
 
 export const banshareSettings = mysqlTable("banshare_settings", {
     guild: varchar("guild", { length: 20 }).notNull().primaryKey(),
-    noButton: boolean("no_button").notNull(),
-    daedalus: boolean("daedalus").notNull(),
-    blockDMs: boolean("block_dms").notNull(),
+    noButton: boolean("no_button").notNull().default(false),
+    daedalus: boolean("daedalus").notNull().default(false),
+    blockDMs: boolean("block_dms").notNull().default(false),
     channel: varchar("channel", { length: 20 }),
 });
 
