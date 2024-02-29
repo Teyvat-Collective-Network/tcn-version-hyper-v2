@@ -66,7 +66,7 @@ export default function Navbar() {
     const links: [string, string, boolean?][] = [
         ["/", "Home"],
         ["/about", "About"],
-        ["/partners", "Partners"],
+        ["/members", "Partners"],
         ["/join", "Apply Now", true],
     ];
 
@@ -75,7 +75,7 @@ export default function Navbar() {
     const menuLinks: MenuLink[] = [
         ["/", FaHouse, "Home"],
         ["/about", FaCircleInfo, "About Us"],
-        ["/partners", FaHandshake, "Partners"],
+        ["/members", FaHandshake, "Partners"],
         ["/join", FaDoorOpen, "Join"],
         ["/info/constitution", FaBuildingColumns, "Constitution"],
         ["/contact", FaAddressCard, "Contact Us"],
@@ -87,7 +87,7 @@ export default function Navbar() {
         ["/info/other-bots", FaRobot, "Other Bots", "info"],
         ["/info/discord", FaDiscord, "Discord Guides", "info"],
         ["/info/glossary", FaBook, "Glossary", "info"],
-        ["/info/exit-procedure", FaDoorClosed, "Exit Procedure", "info"], 
+        ["/info/exit-procedure", FaDoorClosed, "Exit Procedure", "info"],
         ...(user?.staff
             ? ([
                   ["", null, "Network Staff", "staff", true],

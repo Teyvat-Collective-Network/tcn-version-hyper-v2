@@ -9,7 +9,7 @@ export default {
         const query = await db.select({ count: count() }).from(tables.guilds);
         return query[0].count;
     }),
-    getPartnerPage: proc.query(async () => {
+    getMembersPage: proc.query(async () => {
         return await db
             .select({
                 id: tables.guilds.id,
