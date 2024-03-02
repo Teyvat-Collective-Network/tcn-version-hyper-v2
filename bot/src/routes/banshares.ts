@@ -2,6 +2,7 @@ import { z } from "zod";
 import api from "../api.js";
 import bot, { channels } from "../bot.js";
 import { banshareComponents } from "../lib/banshares.js";
+import { createGist } from "../lib/gist.js";
 import { snowflake } from "../schemas.js";
 import { proc } from "../trpc.js";
 
@@ -50,6 +51,14 @@ export default {
                     } catch {
                         return `User ID ${id} is invalid.`;
                     }
+
+            if (ids.length > 1024) {
+                const iso = new Date().toISOString();
+                const value = await createGist(`banshare-ids-${iso}`, `IDs for the banshare on ${iso}`, ids).catch((x) => x);
+
+                if (typeof value === "string") ids = value;
+                else return (value as Error).message;
+            }
 
             const message = await channels.banshares.send({
                 embeds: [
