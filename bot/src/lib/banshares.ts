@@ -129,10 +129,10 @@ export async function renderBanshareSettings(guild: Guild): Promise<BaseMessageO
                         name: "No Button",
                         value: `${settings.noButton ? "Disable" : "Enable"} this setting to ${
                             settings.noButton ? "show" : "remove"
-                        } the ban button (appears on banshares that aren't automatically executed that allow modos to execuute the banshare easily).`,
+                        } the ban button (appears on banshares that aren't automatically executed that allow mods to execute the banshare easily).`,
                     },
                     {
-                        name: "Daedalus Integrationo",
+                        name: "Daedalus Integration",
                         value: `${settings.daedalus ? "Disable" : "Enable"} this setting to ${
                             settings.daedalus ? "stop adding" : "automatically add"
                         } banshares into Daedalus user history.`,
