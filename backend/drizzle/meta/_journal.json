@@ -71,6 +71,13 @@
       "when": 1709357026138,
       "tag": "0009_marvelous_puma",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "5",
+      "when": 1709363744674,
+      "tag": "0010_rich_weapon_omega",
+      "breakpoints": true
     }
   ]
 }

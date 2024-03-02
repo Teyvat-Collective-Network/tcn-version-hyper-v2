@@ -81,22 +81,28 @@ export const banshareLogs = mysqlTable(
     }),
 );
 
-export const banshares = mysqlTable("banshares", {
-    message: varchar("message", { length: 20 }).notNull().primaryKey(),
-    author: varchar("user", { length: 20 }).notNull(),
-    guild: varchar("guild", { length: 20 }).notNull(),
-    created: timestamp("created").notNull(),
-    reminded: timestamp("reminded").notNull(),
-    ids: text("ids").notNull(),
-    reason: text("reason").notNull(),
-    evidence: text("evidence").notNull(),
-    severity: mysqlEnum("severity", ["DM", "P0", "P1", "P2"]).notNull(),
-    status: mysqlEnum("status", ["pending", "rejected", "published", "rescinded"]).notNull(),
-    urgent: boolean("urgent").notNull(),
-    rejecter: varchar("rejecter", { length: 20 }),
-    publisher: varchar("publisher", { length: 20 }),
-    rescinder: varchar("rescinder", { length: 20 }),
-});
+export const banshares = mysqlTable(
+    "banshares",
+    {
+        message: varchar("message", { length: 20 }).notNull().primaryKey(),
+        author: varchar("user", { length: 20 }).notNull(),
+        guild: varchar("guild", { length: 20 }).notNull(),
+        created: timestamp("created").notNull(),
+        reminded: timestamp("reminded").notNull(),
+        ids: text("ids").notNull(),
+        reason: text("reason").notNull(),
+        evidence: text("evidence").notNull(),
+        severity: mysqlEnum("severity", ["DM", "P0", "P1", "P2"]).notNull(),
+        status: mysqlEnum("status", ["pending", "rejected", "published", "rescinded"]).notNull(),
+        urgent: boolean("urgent").notNull(),
+        rejecter: varchar("rejecter", { length: 20 }),
+        publisher: varchar("publisher", { length: 20 }),
+        rescinder: varchar("rescinder", { length: 20 }),
+    },
+    (t) => ({
+        idx_status_reminded: index("idx_status_reminded").on(t.status, t.reminded),
+    }),
+);
 
 export const banshareIds = mysqlTable(
     "banshare_ids",

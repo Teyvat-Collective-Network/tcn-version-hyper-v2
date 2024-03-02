@@ -1,4 +1,4 @@
-import { and, eq, inArray, isNotNull, isNull, or } from "drizzle-orm";
+import { and, eq, inArray, isNotNull, isNull, lt, or } from "drizzle-orm";
 import { z } from "zod";
 import db from "../db/db.js";
 import { tables } from "../db/index.js";
@@ -150,5 +150,27 @@ export default {
             .select({ channel: tables.banshareCrossposts.channel, message: tables.banshareCrossposts.message })
             .from(tables.banshareCrossposts)
             .where(eq(tables.banshareCrossposts.origin, origin));
+    }),
+    fetchPendingBanshares: proc.query(async () => {
+        return await db
+            .select({ message: tables.banshares.message, severity: tables.banshares.severity, urgent: tables.banshares.urgent })
+            .from(tables.banshares)
+            .where(eq(tables.banshares.status, "pending"));
+    }),
+    processOverdueBanshares: proc.mutation(async () => {
+        const { rowsAffected } = await db
+            .update(tables.banshares)
+            .set({ reminded: new Date() })
+            .where(
+                and(
+                    eq(tables.banshares.status, "pending"),
+                    or(
+                        and(eq(tables.banshares.urgent, true), lt(tables.banshares.reminded, new Date(Date.now() - 10000))),
+                        and(eq(tables.banshares.urgent, false), lt(tables.banshares.reminded, new Date(Date.now() - 20000))),
+                    ),
+                ),
+            );
+
+        return rowsAffected > 0;
     }),
 } as const;

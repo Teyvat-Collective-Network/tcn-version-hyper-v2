@@ -1,6 +1,7 @@
 import { ButtonInteraction } from "discord.js";
 import api from "../../../api.js";
 import { channels } from "../../../bot.js";
+import { updateBanshareDashboard } from "../../../lib/banshares.js";
 import { greyButton } from "../../../lib/responses.js";
 
 export default async function (button: ButtonInteraction) {
@@ -15,5 +16,7 @@ export default async function (button: ButtonInteraction) {
 
     await message.edit(greyButton("Rejected", "red"));
     await channels.logs.send(`${message.url} was rejected by ${button.user}.`).catch(() => null);
+    await updateBanshareDashboard();
+
     return greyButton("Banshare Rejected");
 }

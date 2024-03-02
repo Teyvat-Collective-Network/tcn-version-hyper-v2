@@ -1,7 +1,7 @@
 import { ButtonInteraction, ButtonStyle, ComponentType } from "discord.js";
 import api from "../../../api.js";
 import bot, { channels } from "../../../bot.js";
-import { executeBanshare, fetchAutobanTargets } from "../../../lib/banshares.js";
+import { executeBanshare, fetchAutobanTargets, updateBanshareDashboard } from "../../../lib/banshares.js";
 import { template } from "../../../lib/format.js";
 import { greyButton, greyButtonItem } from "../../../lib/responses.js";
 
@@ -24,6 +24,7 @@ export default async function (button: ButtonInteraction, mode: string) {
 
     await message.edit(greyButton(`Publishing (0 / ${targets.length})`));
     await channels.logs.send(`${message.url} is being published by ${button.user}.`).catch(() => null);
+    await updateBanshareDashboard();
 
     for (let index = 0; index < targets.length; index++) {
         const target = targets[index];

@@ -43,6 +43,7 @@ async function fetchChannel<T extends Channel>(id?: string) {
 
 type Channels = {
     applicants: ForumChannel;
+    banshareDashboard: TextChannel;
     banshares: TextChannel;
     execManagement: TextChannel;
     officialBusiness: TextChannel;
@@ -51,6 +52,7 @@ type Channels = {
 
 const keys: Record<keyof Channels, string> = {
     applicants: "CH_APPLICANTS",
+    banshareDashboard: "CH_BANSHARE_DASHBOARD",
     banshares: "CH_BANSHARES",
     execManagement: "CH_EXEC_MANAGEMENT",
     officialBusiness: "CH_OFFICIAL_BUSINESS",

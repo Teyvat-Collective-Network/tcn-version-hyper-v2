@@ -1,0 +1,1 @@
+CREATE INDEX `idx_status_reminded` ON `banshares` (`status`,`reminded`);

@@ -1,6 +1,6 @@
 import { BaseMessageOptions, ComponentType, Guild, Message, User } from "discord.js";
 import api from "../api.js";
-import bot from "../bot.js";
+import bot, { channels } from "../bot.js";
 
 export function banshareComponents(severity: string): BaseMessageOptions["components"] {
     return [
@@ -87,4 +87,18 @@ export async function executeBanshare(target: Message, mod: User, banshare: { me
     }
 
     return banned;
+}
+
+export async function updateBanshareDashboard() {
+    const pending = await api.fetchPendingBanshares.query();
+
+    const text =
+        pending
+            .map((banshare) => `- ${channels.banshares.url}/${banshare.message} (${banshare.severity}) ${banshare.urgent ? "— **urgent**" : ""}`)
+            .join("\n") || "No pending banshares at this time.";
+
+    const message = (await channels.banshareDashboard.messages.fetch({ limit: 1 }).catch(console.error))?.first();
+
+    if (message) await message.edit(text).catch(console.error);
+    else await channels.banshareDashboard.send(text).catch(console.error);
 }

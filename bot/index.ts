@@ -14,3 +14,5 @@ const server = createHTTPServer({ router: appRouter });
 server.listen(+process.env.PORT!);
 
 console.log(`Server listening on localhost:${process.env.PORT}`);
+
+import "./src/tasks/banshare-reminder.js";

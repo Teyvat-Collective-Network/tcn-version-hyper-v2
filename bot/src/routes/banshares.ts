@@ -1,7 +1,7 @@
 import { z } from "zod";
 import api from "../api.js";
 import bot, { channels } from "../bot.js";
-import { banshareComponents } from "../lib/banshares.js";
+import { banshareComponents, updateBanshareDashboard } from "../lib/banshares.js";
 import { createGist } from "../lib/gist.js";
 import { snowflake } from "../schemas.js";
 import { proc } from "../trpc.js";
@@ -88,6 +88,8 @@ export default {
                 content: `<@&${role}> A banshare was just posted; please review it here: ${message.url}`,
                 allowedMentions: { roles: [role] },
             });
+
+            await updateBanshareDashboard();
 
             return null;
         }),
