@@ -1,4 +1,4 @@
-import { and, eq, inArray, isNotNull, isNull, lt, or } from "drizzle-orm";
+import { and, eq, inArray, isNotNull, isNull, lt, or, sql } from "drizzle-orm";
 import { z } from "zod";
 import db from "../db/db.js";
 import { tables } from "../db/index.js";
@@ -165,11 +165,24 @@ export default {
                 and(
                     eq(tables.banshares.status, "pending"),
                     or(
-                        and(eq(tables.banshares.urgent, true), lt(tables.banshares.reminded, new Date(Date.now() - 10000))),
-                        and(eq(tables.banshares.urgent, false), lt(tables.banshares.reminded, new Date(Date.now() - 20000))),
+                        and(eq(tables.banshares.urgent, true), lt(tables.banshares.reminded, new Date(Date.now() - 7200000))),
+                        and(eq(tables.banshares.urgent, false), lt(tables.banshares.reminded, new Date(Date.now() - 21600000))),
                     ),
                 ),
             );
+
+        return rowsAffected > 0;
+    }),
+    addBanshareLoggingChannel: proc.input(z.object({ guild: snowflake, channel: snowflake })).mutation(async ({ input }) => {
+        await db
+            .insert(tables.banshareLogs)
+            .values(input)
+            .onDuplicateKeyUpdate({ set: { guild: sql`guild` } });
+    }),
+    removeBanshareLoggingChannel: proc.input(z.object({ guild: snowflake, channel: snowflake })).mutation(async ({ input: { guild, channel } }) => {
+        const { rowsAffected } = await db
+            .delete(tables.banshareLogs)
+            .where(and(eq(tables.banshareLogs.guild, guild), eq(tables.banshareLogs.channel, channel)));
 
         return rowsAffected > 0;
     }),
