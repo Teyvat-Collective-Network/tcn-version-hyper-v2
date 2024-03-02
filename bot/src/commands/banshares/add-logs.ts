@@ -5,22 +5,23 @@ import { template } from "../../lib/format.js";
 import { CommandData } from "../../types.js";
 
 export const command: CommandData = {
-    group: "output",
-    key: "set",
-    description: "set or remove the output channel for banshares",
+    group: "logs",
+    key: "add",
+    description: "add a banshare logging channel",
     options: [
         {
             type: ApplicationCommandOptionType.Channel,
             channelTypes: [ChannelType.GuildText, ChannelType.PublicThread, ChannelType.PrivateThread],
             name: "channel",
-            description: "the channel to which banshares will be posted (leave empty to stop sending banshares)",
+            description: "the channel to add as a logging channel",
+            required: true,
         },
     ],
 };
 
-export default async function (cmd: ChatInputCommandInteraction, channel?: Channel) {
+export default async function (cmd: ChatInputCommandInteraction, channel: Channel) {
     await ensureCanUseBanshareSettings(cmd);
 
-    await api.setBanshareChannel.mutate({ guild: cmd.guild!.id, channel: cmd.channel!.id });
-    return template.success(channel ? `Banshares will now be posted to ${channel}.` : "Banshares will no longer be posted in this server.");
+    await api.addBanshareLoggingChannel.mutate({ guild: cmd.guild!.id, channel: channel.id });
+    return template.success(`Banshare execution will now be logged in ${channel}.`);
 }

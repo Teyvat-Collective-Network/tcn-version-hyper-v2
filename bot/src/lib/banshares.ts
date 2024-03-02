@@ -1,6 +1,13 @@
-import { BaseMessageOptions, ComponentType, Guild, Message, User } from "discord.js";
+import { BaseMessageOptions, ChatInputCommandInteraction, ComponentType, Guild, Message, User } from "discord.js";
 import api from "../api.js";
 import bot, { channels } from "../bot.js";
+
+export async function ensureCanUseBanshareSettings(cmd: ChatInputCommandInteraction) {
+    if (!(await api.isTCNGuild.query(cmd.guild!.id))) throw "Only TCN servers may use the banshare feature.";
+
+    if (cmd.user.id !== cmd.guild?.ownerId && !(await api.isObserver.query(cmd.user.id)))
+        throw "Only the owner of this server may update the banshare settings.";
+}
 
 export function banshareComponents(severity: string): BaseMessageOptions["components"] {
     return [
