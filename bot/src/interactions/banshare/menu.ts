@@ -19,7 +19,10 @@ export default async function (menu: StringSelectMenuInteraction) {
             embeds: [
                 {
                     ...menu.message.embeds[0].toJSON(),
-                    fields: menu.message.embeds[0].fields.map((field) => ({ ...field, value: field.name === "Severity" ? severity : field.value })),
+                    fields: menu.message.embeds[0].fields.map((field) => ({
+                        ...field,
+                        value: field.name === "Severity" ? (severity === "DM" ? "DM Scam" : severity) : field.value,
+                    })),
                 },
             ],
             components: banshareComponents(severity),

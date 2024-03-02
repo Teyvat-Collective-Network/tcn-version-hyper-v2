@@ -20,7 +20,8 @@ export default async function (button: ButtonInteraction, mode: string) {
 
     await button.editReply(template.progress("This banshare is being published. You may now dismiss this message."));
 
-    const targets = await api.fetchBanshareTargets.query(banshare.severity);
+    let targets = await api.fetchBanshareTargets.query(banshare.severity);
+    if (banshare.severity === "DM") targets = targets.filter((x) => !x.blockDMs);
 
     await message.edit(greyButton(`Publishing (0 / ${targets.length})`));
     await channels.logs.send(`${message.url} is being published by ${button.user}.`).catch(() => null);
