@@ -5,6 +5,7 @@ import { greyButton } from "../../../lib/responses.js";
 
 export default async function (button: ButtonInteraction) {
     await button.deferUpdate();
+    if (!(await api.isObserver.query(button.user.id))) throw "You are not an observer.";
 
     const message = await button.message.fetchReference().catch(() => null);
     if (!message) throw "An unexpected error has occurred.";

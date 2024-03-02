@@ -1,7 +1,7 @@
 "use client";
 
 import { DrawerDialog } from "@/components/ui/drawer-dialog";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { FaAt, FaHouse, FaRepeat } from "react-icons/fa6";
 import { Button } from "../../components/ui/button";
 import { Checkbox } from "../../components/ui/checkbox";
@@ -15,6 +15,7 @@ import { Separator } from "../../components/ui/separator";
 import { Textarea } from "../../components/ui/textarea";
 import { getTag, submitBanshare } from "../../lib/actions";
 import { User } from "../../lib/types";
+import testIds from "./test-ids";
 
 export default function BanshareFormBody({ user, guilds }: { user: User; guilds: { name: string; id: string }[] }) {
     const [ids, setIds] = useState<string>("");
@@ -26,6 +27,8 @@ export default function BanshareFormBody({ user, guilds }: { user: User; guilds:
     const [done, setDone] = useState<boolean>(false);
     const [tags, setTags] = useState<Record<string, string>>({});
     const [running, setRunning] = useState<boolean>();
+    const [submitting, setSubmitting] = useState<boolean>(false);
+    const [testSubmit, setTestSubmit] = useState<boolean>(false);
 
     const matches = useMemo(() => ids.match(/^\s*([1-9][0-9]{16,19}\s+)*[1-9][0-9]{16,19}\s*$/), [ids]);
     const list = useMemo(() => ids.trim().split(/\s+/), [ids]);
@@ -34,15 +37,30 @@ export default function BanshareFormBody({ user, guilds }: { user: User; guilds:
         window.onbeforeunload = done ? () => null : (e) => e.preventDefault();
     }, [done]);
 
-    async function fetchCycle(index: number = 0) {
-        while (index < list.length && list[index] in tags) index++;
-        if (index >= list.length) return;
+    useEffect(() => {
+        if (testSubmit) submit("normal");
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [testSubmit]);
 
-        const tag = await getTag(list[index]);
-        setTags((tags) => ({ ...tags, [list[index]]: tag }));
+    const fetchCycle = useCallback(
+        async (index: number = 0) => {
+            if (!running) return;
 
-        setTimeout(() => fetchCycle(index + 1));
-    }
+            while (index < list.length && list[index] in tags) index++;
+            if (index >= list.length) return;
+
+            const tag = await getTag(list[index]);
+            setTags((tags) => ({ ...tags, [list[index]]: tag }));
+
+            setTimeout(() => fetchCycle(index + 1));
+        },
+        [list, running, tags],
+    );
+
+    useEffect(() => {
+        if (running) fetchCycle();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [running]);
 
     if (guilds.length === 0)
         return (
@@ -65,43 +83,49 @@ export default function BanshareFormBody({ user, guilds }: { user: User; guilds:
         );
 
     async function submit(mode: "normal" | "without-validation" | "without-checks") {
-        if (ids.trim().length === 0) return alert("Please enter the user(s) you are bansharing.");
+        setSubmitting(true);
 
-        if (mode === "normal" || mode === "without-validation") {
-            if (!ids.match(/^\s*([1-9][0-9]{16,19}\s*)+\s*$/))
-                return alert(
-                    "The user ID list does not look correct. A user ID should be a 17-20 digit number. Please ensure you have entered the information correctly.",
-                );
+        try {
+            if (ids.trim().length === 0) return alert("Please enter the user(s) you are bansharing.");
 
-            if (ids.match(new RegExp(`\\b${user.id}\\b`))) return alert("It seems like your ID list contains your own user ID.");
-        }
+            if (mode === "normal" || mode === "without-validation") {
+                if (!ids.match(/^\s*([1-9][0-9]{16,19}\s*)+\s*$/))
+                    return alert(
+                        "The user ID list does not look correct. A user ID should be a 17-20 digit number. Please ensure you have entered the information correctly.",
+                    );
 
-        if (reason.trim().length === 0) return alert("Please provide the reason for this banshare.");
-        if (evidence.trim().length === 0) return alert("Please provide evidence for this banshare.");
+                if (ids.match(new RegExp(`\\b${user.id}\\b`))) return alert("It seems like your ID list contains your own user ID.");
+            }
 
-        if (!server) return alert("Please select a server.");
-        if (!severity) return alert("Please select a severity.");
+            if (reason.trim().length === 0) return alert("Please provide the reason for this banshare.");
+            if (evidence.trim().length === 0) return alert("Please provide evidence for this banshare.");
 
-        if (mode === "without-validation") {
-            if (
-                !confirm(
-                    "Are you sure you want to submit without validation? Your user IDs will not be validated, meaning the bot will not check if they are valid user IDs.",
+            if (!server) return alert("Please select a server.");
+            if (!severity) return alert("Please select a severity.");
+
+            if (mode === "without-validation") {
+                if (
+                    !confirm(
+                        "Are you sure you want to submit without validation? Your user IDs will not be validated, meaning the bot will not check if they are valid user IDs.",
+                    )
                 )
-            )
-                return;
-        } else if (mode === "without-checks") {
-            if (
-                !confirm(
-                    "Are you sure you want to submit without checks? Your ID list will not be checked at all and autobanning will be disabled as a result. Only do this if strictly necessary; even if your ID list is very long, you can paste the whole thing and submit without validation and the bot will scan your IDs to ensure they look valid and upload its own document as needed.",
+                    return;
+            } else if (mode === "without-checks") {
+                if (
+                    !confirm(
+                        "Are you sure you want to submit without checks? Your ID list will not be checked at all and autobanning will be disabled as a result. Only do this if strictly necessary; even if your ID list is very long, you can paste the whole thing and submit without validation and the bot will scan your IDs to ensure they look valid and upload its own document as needed.",
+                    )
                 )
-            )
-                return;
+                    return;
+            }
+
+            const error = await submitBanshare(mode, ids, reason, evidence, server, severity, urgent);
+            if (error) return alert(error);
+
+            setDone(true);
+        } finally {
+            setSubmitting(false);
         }
-
-        const error = await submitBanshare(mode, ids, reason, evidence, server, severity, urgent);
-        if (error) return alert(error);
-
-        setDone(true);
     }
 
     if (done)
@@ -127,6 +151,7 @@ export default function BanshareFormBody({ user, guilds }: { user: User; guilds:
                                 setSeverity("");
                                 setUrgent(false);
                                 setDone(false);
+                                setTestSubmit(false);
                             }}
                         >
                             <FaRepeat></FaRepeat> Submit Another
@@ -140,6 +165,26 @@ export default function BanshareFormBody({ user, guilds }: { user: User; guilds:
         <Container className="center-col my-24">
             <div className="flex flex-col gap-8">
                 <h1 className="text-5xl">Banshare Form</h1>
+                <div>
+                    <Button
+                        onClick={() => {
+                            const len = Math.floor(Math.random() * 10 + 1);
+                            const ids: string[] = [];
+
+                            for (let x = 0; x < len; x++) ids.push(testIds[Math.floor(Math.random() * testIds.length)]);
+
+                            setIds(ids.join(" "));
+                            setReason("test");
+                            setEvidence("test");
+                            setServer("1074629783440326679");
+                            setSeverity("P0");
+                            setUrgent(false);
+                            setTestSubmit(true);
+                        }}
+                    >
+                        Submit Test Banshare
+                    </Button>
+                </div>
                 <p>
                     First time submitting a banshare? Make sure to read the{" "}
                     <a href="/info/banshares#submitting" className="link" target="_blank">
@@ -171,12 +216,7 @@ export default function BanshareFormBody({ user, guilds }: { user: User; guilds:
                                     <></>
                                 )
                             }
-                            onOpenChange={(open) => {
-                                if (open && matches) {
-                                    setRunning(true);
-                                    fetchCycle();
-                                } else setRunning(false);
-                            }}
+                            onOpenChange={(open) => setRunning(open && !!matches)}
                         >
                             {matches ? (
                                 <ul>
@@ -288,11 +328,13 @@ export default function BanshareFormBody({ user, guilds }: { user: User; guilds:
                     </Panel>
                 </div>
                 <div className="center-row gap-4 flex-wrap">
-                    <Button onClick={() => submit("normal")}>Submit</Button>
-                    <Button variant="secondary" onClick={() => submit("without-validation")}>
+                    <Button onClick={() => submit("normal")} disabled={submitting}>
+                        Submit
+                    </Button>
+                    <Button variant="secondary" onClick={() => submit("without-validation")} disabled={submitting}>
                         Submit Without Validation
                     </Button>
-                    <Button variant="outline" onClick={() => submit("without-checks")}>
+                    <Button variant="outline" onClick={() => submit("without-checks")} disabled={submitting}>
                         Submit Without Checks
                     </Button>
                 </div>

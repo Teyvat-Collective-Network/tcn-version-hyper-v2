@@ -1,4 +1,4 @@
-import { BaseMessageOptions, ButtonStyle, ComponentType, InteractionReplyOptions } from "discord.js";
+import { ButtonComponentData, ButtonStyle, ComponentType, InteractionReplyOptions } from "discord.js";
 
 export function confirmation(key: string, label: string = "Confirm"): InteractionReplyOptions {
     return {
@@ -25,23 +25,20 @@ export function confirmation(key: string, label: string = "Confirm"): Interactio
     };
 }
 
-export function greyButton(label: string, color: "red" | "green" | "blue" | "grey" = "grey"): BaseMessageOptions {
+export function greyButtonItem(label: string, color: "red" | "green" | "blue" | "grey" = "grey"): ButtonComponentData {
     return {
-        components: [
-            {
-                type: ComponentType.ActionRow,
-                components: [
-                    {
-                        type: ComponentType.Button,
-                        style: ({ red: ButtonStyle.Danger, green: ButtonStyle.Success, blue: ButtonStyle.Primary, grey: ButtonStyle.Secondary } as const)[
-                            color
-                        ],
-                        customId: ".",
-                        label,
-                        disabled: true,
-                    },
-                ],
-            },
-        ],
+        type: ComponentType.Button,
+        style: ({ red: ButtonStyle.Danger, green: ButtonStyle.Success, blue: ButtonStyle.Primary, grey: ButtonStyle.Secondary } as const)[color],
+        customId: ".",
+        label,
+        disabled: true,
     };
+}
+
+export function greyButtonRow(label: string, color: "red" | "green" | "blue" | "grey" = "grey") {
+    return { type: ComponentType.ActionRow, components: [greyButtonItem(label, color)] };
+}
+
+export function greyButton(label: string, color: "red" | "green" | "blue" | "grey" = "grey") {
+    return { components: [greyButtonRow(label, color)] };
 }

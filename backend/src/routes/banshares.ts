@@ -1,9 +1,21 @@
-import { and, eq, inArray, isNull, or } from "drizzle-orm";
+import { and, eq, inArray, isNotNull, isNull, or } from "drizzle-orm";
 import { z } from "zod";
 import db from "../db/db.js";
 import { tables } from "../db/index.js";
 import { snowflake } from "../schemas.js";
 import { proc } from "../trpc.js";
+
+async function getBanshare(message: string) {
+    const query = await db.select().from(tables.banshares).where(eq(tables.banshares.message, message));
+
+    const banshare = query.at(0);
+    if (!banshare) return null;
+
+    return {
+        ...banshare,
+        list: (await db.select({ user: tables.banshareIds.user }).from(tables.banshareIds).where(eq(tables.banshareIds.message, message))).map((x) => x.user),
+    };
+}
 
 export default {
     checkBanshareIDs: proc
@@ -23,8 +35,18 @@ export default {
             return null;
         }),
     fetchBanshare: proc.input(snowflake).query(async ({ input: message }) => {
-        const query = await db.select().from(tables.banshares).where(eq(tables.banshares.message, message));
-        return query.at(0);
+        return await getBanshare(message);
+    }),
+    getBanshareFromCrosspost: proc.input(snowflake).query(async ({ input: message }) => {
+        const query = await db
+            .select({ origin: tables.banshareCrossposts.origin })
+            .from(tables.banshareCrossposts)
+            .where(eq(tables.banshareCrossposts.message, message));
+
+        const item = query.at(0);
+        if (!item) return null;
+
+        return await getBanshare(item.origin);
     }),
     uploadBanshare: proc
         .input(
@@ -33,14 +55,24 @@ export default {
                 author: snowflake,
                 guild: snowflake,
                 ids: z.string(),
+                list: snowflake.array(),
                 reason: z.string(),
                 evidence: z.string(),
                 severity: z.enum(["P0", "P1", "P2", "DM"]),
                 urgent: z.boolean(),
             }),
         )
-        .mutation(async ({ input }) => {
+        .mutation(async ({ input: { list, ...input } }) => {
             await db.insert(tables.banshares).values({ ...input, created: new Date(), reminded: new Date(), status: "pending" });
+            if (list.length > 0) await db.insert(tables.banshareIds).values(list.map((user) => ({ message: input.message, user })));
+        }),
+    addBanshareCrosspost: proc
+        .input(z.object({ origin: snowflake, guild: snowflake, channel: snowflake, message: snowflake, executed: z.boolean(), remaining: snowflake.array() }))
+        .mutation(async ({ input: { remaining, ...input } }) => {
+            await db.insert(tables.banshareCrossposts).values(input);
+
+            if (remaining.length > 0)
+                await db.insert(tables.remainingBanshareTargets).values(remaining.map((user) => ({ guild: input.guild, origin: input.origin, user })));
         }),
     changeBanshareSeverity: proc
         .input(z.object({ user: snowflake, message: snowflake, severity: z.enum(["P0", "P1", "P2", "DM"]) }))
@@ -52,8 +84,8 @@ export default {
         await db.insert(tables.banshareSettings).values({ guild, channel }).onDuplicateKeyUpdate({ set: { channel } });
     }),
     transitionBanshare: proc
-        .input(z.object({ message: snowflake, user: snowflake, action: z.enum(["reject", "publish", "rescind"]) }))
-        .mutation(async ({ input: { message, user, action } }) => {
+        .input(z.object({ message: snowflake, user: snowflake, action: z.enum(["reject", "publish", "rescind"]), reason: z.string().optional() }))
+        .mutation(async ({ input: { message, user, action, reason } }) => {
             const { rowsAffected } = await db
                 .update(tables.banshares)
                 .set({ status: `${action}ed` })
@@ -66,13 +98,16 @@ export default {
 
             if (rowsAffected === 0) return false;
 
-            await db.insert(tables.auditLogs).values({ action: `banshare/${action}`, user, data: { message } });
+            await db.insert(tables.auditLogs).values({ action: `banshare/${action}`, user, data: { message }, reason });
 
             return true;
         }),
     fetchBanshareTargets: proc.input(z.enum(["DM", "P0", "P1", "P2"])).query(async ({ input: severity }) => {
         return await db
             .select({
+                guild: tables.guilds.id,
+                name: tables.guilds.name,
+                invite: tables.guilds.invite,
                 channel: tables.banshareSettings.channel,
                 noButton: tables.banshareSettings.noButton,
                 blockDMs: tables.banshareSettings.blockDMs,
@@ -82,6 +117,38 @@ export default {
             .from(tables.banshareSettings)
             .rightJoin(tables.guilds, eq(tables.banshareSettings.guild, tables.guilds.id))
             .leftJoin(tables.banshareAutobanSettings, eq(tables.banshareAutobanSettings.guild, tables.banshareSettings.guild))
-            .where(or(isNull(tables.banshareAutobanSettings.severity), eq(tables.banshareAutobanSettings.severity, severity)));
+            .where(
+                and(
+                    isNotNull(tables.banshareSettings.channel),
+                    or(isNull(tables.banshareAutobanSettings.severity), eq(tables.banshareAutobanSettings.severity, severity)),
+                ),
+            );
+    }),
+    fetchBanshareLogs: proc.input(snowflake).query(async ({ input: guild }) => {
+        return (await db.select({ channel: tables.banshareLogs.channel }).from(tables.banshareLogs).where(eq(tables.banshareLogs.guild, guild))).map(
+            (x) => x.channel,
+        );
+    }),
+    executeBanshare: proc.input(snowflake).mutation(async ({ input: message }) => {
+        const { rowsAffected } = await db
+            .update(tables.banshareCrossposts)
+            .set({ executed: true })
+            .where(and(eq(tables.banshareCrossposts.message, message), eq(tables.banshareCrossposts.executed, false)));
+
+        return rowsAffected !== 0;
+    }),
+    fetchBanshareRemainingTargets: proc.input(z.object({ guild: snowflake, message: snowflake })).query(async ({ input: { guild, message } }) => {
+        const query = await db
+            .select({ user: tables.remainingBanshareTargets.user })
+            .from(tables.remainingBanshareTargets)
+            .where(and(eq(tables.remainingBanshareTargets.origin, message), eq(tables.remainingBanshareTargets.guild, guild)));
+
+        return query.map((x) => x.user);
+    }),
+    fetchBanshareCrossposts: proc.input(snowflake).query(async ({ input: origin }) => {
+        return await db
+            .select({ channel: tables.banshareCrossposts.channel, message: tables.banshareCrossposts.message })
+            .from(tables.banshareCrossposts)
+            .where(eq(tables.banshareCrossposts.origin, origin));
     }),
 } as const;

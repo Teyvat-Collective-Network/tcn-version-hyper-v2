@@ -71,7 +71,7 @@ export default {
                 components: banshareComponents(severity),
             });
 
-            await api.uploadBanshare.mutate({ message: message.id, author, guild: server, ids, reason, evidence, severity, urgent });
+            await api.uploadBanshare.mutate({ message: message.id, author, guild: server, ids, list: idlist, reason, evidence, severity, urgent });
 
             const role = urgent ? process.env.ROLE_OBSERVER! : process.env.ROLE_BANSHARE_PING!;
 

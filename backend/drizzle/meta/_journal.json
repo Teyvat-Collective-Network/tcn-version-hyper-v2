@@ -50,6 +50,27 @@
       "when": 1709239603834,
       "tag": "0006_free_steel_serpent",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1709319243904,
+      "tag": "0007_fixed_sabretooth",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "5",
+      "when": 1709350934216,
+      "tag": "0008_long_jackpot",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "5",
+      "when": 1709357026138,
+      "tag": "0009_marvelous_puma",
+      "breakpoints": true
     }
   ]
 }

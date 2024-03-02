@@ -98,6 +98,44 @@ export const banshares = mysqlTable("banshares", {
     rescinder: varchar("rescinder", { length: 20 }),
 });
 
+export const banshareIds = mysqlTable(
+    "banshare_ids",
+    {
+        message: varchar("message", { length: 20 }).notNull(),
+        user: varchar("user", { length: 20 }).notNull(),
+    },
+    (t) => ({
+        idx_message_user: index("idx_message_user").on(t.message, t.user),
+    }),
+);
+
+export const banshareCrossposts = mysqlTable(
+    "banshare_crossposts",
+    {
+        origin: varchar("origin", { length: 20 }).notNull(),
+        guild: varchar("guild", { length: 20 }).notNull(),
+        channel: varchar("channel", { length: 20 }).notNull(),
+        message: varchar("message", { length: 20 }).notNull(),
+        executed: boolean("executed").notNull().default(false),
+    },
+    (t) => ({
+        pk_origin_guild: primaryKey({ name: "pk_origin_guild", columns: [t.origin, t.guild] }),
+        idx_message: index("idx_message").on(t.message),
+    }),
+);
+
+export const remainingBanshareTargets = mysqlTable(
+    "remaining_banshare_targets",
+    {
+        origin: varchar("origin", { length: 20 }).notNull(),
+        guild: varchar("guild", { length: 20 }).notNull(),
+        user: varchar("user", { length: 20 }).notNull(),
+    },
+    (t) => ({
+        idx_origin_guild: index("idx_origin_guild").on(t.origin, t.guild),
+    }),
+);
+
 export const characters = mysqlTable("characters", {
     id: varchar("id", { length: 32 }).notNull().primaryKey(),
     displayName: varchar("display_name", { length: 32 }),
