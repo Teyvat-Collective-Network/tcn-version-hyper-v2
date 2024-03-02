@@ -1,3 +1,4 @@
+import { z } from "zod";
 import db from "../db/db.js";
 import { tables } from "../db/index.js";
 import { snowflake } from "../schemas.js";
@@ -11,5 +12,11 @@ export default {
                 .insert(tables.guildUsers)
                 .values(guilds.map(({ id }) => ({ guild: id, user, staff: true })))
                 .onDuplicateKeyUpdate({ set: { staff: true } });
+    }),
+    setObserverStatus: proc.input(z.object({ user: snowflake, observer: z.boolean() })).mutation(async ({ input: { user, observer } }) => {
+        await db
+            .insert(tables.users)
+            .values({ id: user, observer, owner: false, advisor: false, council: false, staff: false, voter: false })
+            .onDuplicateKeyUpdate({ set: { observer } });
     }),
 } as const;
