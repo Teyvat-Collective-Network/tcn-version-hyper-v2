@@ -1,4 +1,4 @@
-import { BaseMessageOptions, ChatInputCommandInteraction, ComponentType, Guild, Message, User } from "discord.js";
+import { BaseMessageOptions, ButtonStyle, ChatInputCommandInteraction, ComponentType, Guild, Message, User } from "discord.js";
 import api from "../api.js";
 import bot, { channels } from "../bot.js";
 
@@ -108,4 +108,84 @@ export async function updateBanshareDashboard() {
 
     if (message) await message.edit(text).catch(console.error);
     else await channels.banshareDashboard.send(text).catch(console.error);
+}
+
+export async function renderBanshareSettings(guild: Guild): Promise<BaseMessageOptions> {
+    const settings = await api.getBanshareSettings.query(guild.id);
+
+    return {
+        embeds: [
+            {
+                title: "Banshare Settings",
+                color: 0x2b2d31,
+                fields: [
+                    {
+                        name: "Block DMs",
+                        value: `${settings.blockDMs ? "Disable" : "Enable"} this setting to ${
+                            settings.blockDMs ? "resume" : "stop"
+                        } receiving banshares with the DM Scam severity.`,
+                    },
+                    {
+                        name: "No Button",
+                        value: `${settings.noButton ? "Disable" : "Enable"} this setting to ${
+                            settings.noButton ? "show" : "remove"
+                        } the ban button (appears on banshares that aren't automatically executed that allow modos to execuute the banshare easily).`,
+                    },
+                    {
+                        name: "Daedalus Integrationo",
+                        value: `${settings.daedalus ? "Disable" : "Enable"} this setting to ${
+                            settings.daedalus ? "stop adding" : "automatically add"
+                        } banshares into Daedalus user history.`,
+                    },
+                    {
+                        name: "Autoban",
+                        value: "Use the dropdown menu below to control autoban thresholds.",
+                    },
+                ],
+            },
+        ],
+        components: [
+            {
+                type: ComponentType.ActionRow,
+                components: [
+                    {
+                        type: ComponentType.Button,
+                        style: settings.blockDMs ? ButtonStyle.Success : ButtonStyle.Danger,
+                        customId: `::banshare/settings:blockDMs:${!settings.blockDMs}`,
+                        label: `Block DMs: ${settings.blockDMs ? "on" : "off"}`,
+                    },
+                    {
+                        type: ComponentType.Button,
+                        style: settings.noButton ? ButtonStyle.Success : ButtonStyle.Danger,
+                        customId: `::banshare/settings:noButton:${!settings.noButton}`,
+                        label: `No Button: ${settings.noButton ? "on" : "off"}`,
+                    },
+                    {
+                        type: ComponentType.Button,
+                        style: settings.daedalus ? ButtonStyle.Success : ButtonStyle.Danger,
+                        customId: `::banshare/settings:daedalus:${!settings.daedalus}`,
+                        label: `Daedalus Integration: ${settings.daedalus ? "on" : "off"}`,
+                    },
+                ],
+            },
+            {
+                type: ComponentType.ActionRow,
+                components: [
+                    {
+                        type: ComponentType.StringSelect,
+                        customId: `::banshare/settings/autoban`,
+                        minValues: 0,
+                        maxValues: 8,
+                        options: ["members", "non-members"].flatMap((type) =>
+                            (["P0", "P1", "P2", "DM"] as const).map((severity) => ({
+                                label: `${severity} against ${type}`,
+                                value: `${severity}-${type}`,
+                                default: settings.autoban[severity][type === "members" ? 0 : 1],
+                            })),
+                        ),
+                    },
+                ],
+            },
+        ],
+    };
 }

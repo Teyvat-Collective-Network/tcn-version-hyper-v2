@@ -11,6 +11,7 @@ export const command: CommandData = {
 };
 
 export default async function (cmd: ChatInputCommandInteraction) {
+    await cmd.deferReply({ ephemeral: true });
     await ensureCanUseBanshareSettings(cmd);
 
     const logs = await api.fetchBanshareLogs.query(cmd.guild!.id);

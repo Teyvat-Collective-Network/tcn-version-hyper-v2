@@ -13,5 +13,5 @@ async function cycle() {
 
 setTimeout(() => {
     cycle();
-    setInterval(cycle, 1000);
-}, 1000 - (Date.now() % 1000));
+    setInterval(cycle, 600000);
+}, 600000 - (Date.now() % 600000));

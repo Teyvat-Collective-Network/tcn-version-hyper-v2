@@ -186,4 +186,53 @@ export default {
 
         return rowsAffected > 0;
     }),
+    getBanshareSettings: proc.input(snowflake).query(async ({ input: guild }) => {
+        const query = await db
+            .select({ blockDMs: tables.banshareSettings.blockDMs, noButton: tables.banshareSettings.noButton, daedalus: tables.banshareSettings.daedalus })
+            .from(tables.banshareSettings)
+            .where(eq(tables.banshareSettings.guild, guild));
+
+        const obj = query.at(0) ?? { blockDMs: false, noButton: false, daedalus: false };
+
+        const autoban = { DM: [false, false], P0: [false, false], P1: [false, false], P2: [false, false] };
+
+        const items = await db
+            .select({
+                severity: tables.banshareAutobanSettings.severity,
+                member: tables.banshareAutobanSettings.member,
+                nonmember: tables.banshareAutobanSettings.nonmember,
+            })
+            .from(tables.banshareAutobanSettings)
+            .where(eq(tables.banshareAutobanSettings.guild, guild));
+
+        for (const { severity, member, nonmember } of items) {
+            autoban[severity] = [member, nonmember];
+        }
+
+        return { ...obj, autoban };
+    }),
+    setBanshareToggle: proc
+        .input(z.object({ guild: snowflake, path: z.enum(["blockDMs", "noButton", "daedalus"]), enable: z.boolean() }))
+        .mutation(async ({ input: { guild, path, enable } }) => {
+            await db
+                .update(tables.banshareSettings)
+                .set({ [path]: enable })
+                .where(eq(tables.banshareSettings.guild, guild));
+        }),
+    setBanshareAutoban: proc
+        .input(
+            z.object({
+                guild: snowflake,
+                items: z.record(z.tuple([z.boolean(), z.boolean()])),
+            }),
+        )
+        .mutation(async ({ input: { guild, items } }) => {
+            await db.transaction(async (tx) => {
+                for (const [key, [member, nonmember]] of Object.entries(items))
+                    await tx
+                        .insert(tables.banshareAutobanSettings)
+                        .values({ guild, severity: key as any, member, nonmember })
+                        .onDuplicateKeyUpdate({ set: { member, nonmember } });
+            });
+        }),
 } as const;

@@ -20,6 +20,7 @@ export const command: CommandData = {
 };
 
 export default async function (cmd: ChatInputCommandInteraction, channel: Channel) {
+    await cmd.deferReply({ ephemeral: true });
     await ensureCanUseBanshareSettings(cmd);
 
     return (await api.removeBanshareLoggingChannel.mutate({ guild: cmd.guild!.id, channel: channel.id }))
