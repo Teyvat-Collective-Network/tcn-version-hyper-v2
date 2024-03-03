@@ -78,6 +78,13 @@
       "when": 1709363744674,
       "tag": "0010_rich_weapon_omega",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "5",
+      "when": 1709502556366,
+      "tag": "0011_sturdy_vision",
+      "breakpoints": true
     }
   ]
 }

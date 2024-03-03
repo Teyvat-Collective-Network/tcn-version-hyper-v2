@@ -339,6 +339,7 @@ export const guilds = mysqlTable("guilds", {
     owner: varchar("owner", { length: 20 }).notNull(),
     advisor: varchar("advisor", { length: 20 }),
     delegated: boolean("delegated").notNull(),
+    lastDelegatedAt: timestamp("last_delegated_at").notNull().defaultNow(),
     inducted: timestamp("inducted").notNull().defaultNow(),
 });
 

@@ -1,0 +1,1 @@
+ALTER TABLE `guilds` ADD `last_delegated_at` timestamp DEFAULT (now()) NOT NULL;

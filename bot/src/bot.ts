@@ -85,8 +85,6 @@ export let hub: Guild = {} as Guild;
         for (const name of readdirSync(`./src/events/${module}`)) {
             const { default: handle } = await import(`./events/${module}/${name.slice(0, -3)}.js`);
             (eventListeners[Events[name.slice(0, -3) as keyof typeof Events]] ??= []).push(handle);
-
-            console.log(`Loaded event ${name.slice(0, -3)} of module ${module}.`);
         }
     }
 
@@ -98,7 +96,6 @@ export let hub: Guild = {} as Guild;
         const groups: Record<string, ApplicationCommandSubCommandData[]> = {};
 
         for (const name of readdirSync(`./src/commands/${module}`)) {
-            console.log(`Loading file ${name.slice(0, -3)} in module ${module}`);
             const data = await import(`./commands/${module}/${name.slice(0, -3)}.js`);
             const { command } = data;
             command.options ??= [];
