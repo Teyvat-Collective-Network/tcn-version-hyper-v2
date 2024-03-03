@@ -15,7 +15,6 @@ import { Separator } from "../../components/ui/separator";
 import { Textarea } from "../../components/ui/textarea";
 import { getTag, submitBanshare } from "../../lib/actions";
 import { User } from "../../lib/types";
-import testIds from "./test-ids";
 
 export default function BanshareFormBody({ user, guilds }: { user: User; guilds: { name: string; id: string }[] }) {
     const [ids, setIds] = useState<string>("");
@@ -28,7 +27,6 @@ export default function BanshareFormBody({ user, guilds }: { user: User; guilds:
     const [tags, setTags] = useState<Record<string, string>>({});
     const [running, setRunning] = useState<boolean>();
     const [submitting, setSubmitting] = useState<boolean>(false);
-    const [testSubmit, setTestSubmit] = useState<boolean>(false);
 
     const matches = useMemo(() => ids.match(/^\s*([1-9][0-9]{16,19}\s+)*[1-9][0-9]{16,19}\s*$/), [ids]);
     const list = useMemo(() => ids.trim().split(/\s+/), [ids]);
@@ -36,11 +34,6 @@ export default function BanshareFormBody({ user, guilds }: { user: User; guilds:
     useEffect(() => {
         window.onbeforeunload = done ? () => null : (e) => e.preventDefault();
     }, [done]);
-
-    useEffect(() => {
-        if (testSubmit) submit("normal");
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [testSubmit]);
 
     const fetchCycle = useCallback(
         async (index: number = 0) => {
@@ -151,7 +144,6 @@ export default function BanshareFormBody({ user, guilds }: { user: User; guilds:
                                 setSeverity("");
                                 setUrgent(false);
                                 setDone(false);
-                                setTestSubmit(false);
                             }}
                         >
                             <FaRepeat></FaRepeat> Submit Another
@@ -165,26 +157,6 @@ export default function BanshareFormBody({ user, guilds }: { user: User; guilds:
         <Container className="center-col my-24">
             <div className="flex flex-col gap-8">
                 <h1 className="text-5xl">Banshare Form</h1>
-                <div>
-                    <Button
-                        onClick={() => {
-                            const len = Math.floor(Math.random() * 10 + 1);
-                            const ids: string[] = [];
-
-                            for (let x = 0; x < len; x++) ids.push(testIds[Math.floor(Math.random() * testIds.length)]);
-
-                            setIds(ids.join(" "));
-                            setReason("test");
-                            setEvidence("test");
-                            setServer("1074629783440326679");
-                            setSeverity("P0");
-                            setUrgent(false);
-                            setTestSubmit(true);
-                        }}
-                    >
-                        Submit Test Banshare
-                    </Button>
-                </div>
                 <p>
                     First time submitting a banshare? Make sure to read the{" "}
                     <a href="/info/banshares#submitting" className="link" target="_blank">
