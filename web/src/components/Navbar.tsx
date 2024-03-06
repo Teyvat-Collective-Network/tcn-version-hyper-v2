@@ -134,7 +134,7 @@ export default function Navbar() {
                         <h1 className="block sm:hidden text-2xl font-bold">TCN</h1>
                     </a>
                 </div>
-                <div className="hidden lg:flex items-center">
+                <div className="hidden xl:flex items-center">
                     {links.map(([href, label, highlight], index) => (
                         <Fragment key={index}>
                             {index === 0 ? null : <Separator className="h-8" orientation="vertical"></Separator>}

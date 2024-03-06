@@ -26,7 +26,21 @@ export default function VotingCenterBody({ polls }: { polls: Awaited<ReturnType<
                     <p>
                         <b>There are no polls at this time for you to vote on.</b>
                     </p>
-                ) : null}
+                ) : (
+                    <ul className="list-disc pl-8">
+                        {polls.map((poll, i) => (
+                            <li key={i}>
+                                <a href={`/vote/${poll.id}`}>
+                                    {poll.mode === "induction"
+                                        ? `Induction vote for ${poll.server}`
+                                        : poll.mode === "election"
+                                        ? `Wave ${poll.wave} Election`
+                                        : poll.question}
+                                </a>
+                            </li>
+                        ))}
+                    </ul>
+                )}
             </div>
         </Container>
     );

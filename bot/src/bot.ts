@@ -48,6 +48,7 @@ type Channels = {
     execManagement: TextChannel;
     officialBusiness: TextChannel;
     logs: TextChannel;
+    voteHere: TextChannel;
 };
 
 const keys: Record<keyof Channels, string> = {
@@ -57,6 +58,7 @@ const keys: Record<keyof Channels, string> = {
     execManagement: "CH_EXEC_MANAGEMENT",
     officialBusiness: "CH_OFFICIAL_BUSINESS",
     logs: "CH_LOGS",
+    voteHere: "CH_VOTE_HERE",
 };
 
 export const channels = {} as Channels;
