@@ -3,7 +3,7 @@ export type Vote = {
     abstain: boolean;
     yes: boolean;
     verdict: "preinduct" | "induct" | "extend" | "reject";
-    candidates: string[];
+    candidates: Record<string, number>;
     selected: string[];
 };
 
